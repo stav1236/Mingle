@@ -8,6 +8,7 @@ import rtlPlugin from "stylis-plugin-rtl";
 import { prefixer } from "stylis";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
+import { DarkModeProvider } from "./contexts/DarkModeContext.tsx";
 
 const theme = createTheme({
   direction: "rtl",
@@ -21,9 +22,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>
-        <div dir="rtl">
-          <App />
-        </div>
+        <DarkModeProvider>
+          <div dir="rtl">
+            <App />
+          </div>
+        </DarkModeProvider>
       </ThemeProvider>
     </CacheProvider>
   </React.StrictMode>
