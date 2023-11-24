@@ -1,0 +1,14 @@
+:root {
+  font-family: Alef, Miriam Libre, Arimo, Inter, system-ui, Avenir, Helvetica,
+    Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
