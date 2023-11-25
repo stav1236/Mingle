@@ -1,21 +1,16 @@
 import * as React from "react";
-import { Button, ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
+
+import AuthPage from "./Pages/AuthPage";
 import { useDarkMode } from "./contexts/DarkModeContext";
 
 const App = () => {
-  const { theme, toggleDarkMode } = useDarkMode();
+  const { theme } = useDarkMode();
 
   return (
-    <>
-      <ThemeProvider theme={theme}>
-        <Button variant="contained" onClick={toggleDarkMode}>
-          כפתור
-        </Button>
-        <Button color="secondary" variant="contained">
-          כפתור
-        </Button>
-      </ThemeProvider>
-    </>
+    <ThemeProvider theme={theme}>
+      <AuthPage />
+    </ThemeProvider>
   );
 };
 
