@@ -9,13 +9,13 @@ import {
 } from "@mui/material";
 
 const AuthPage = () => {
-  const isDesktop = useMediaQuery("(min-width:600px)");
+  const isDesktop = useMediaQuery("(min-width:1000px)");
 
   return (
     <Box
       sx={{
         display: "flex",
-        height: "100vh",
+        minHeight: "100vh",
         justifyContent: "center",
         alignContent: `${isDesktop ? "" : "center"}`,
         alignItems: `${isDesktop ? "center" : ""}`,
@@ -56,8 +56,10 @@ const AuthPage = () => {
         sx={{
           borderRadius: "2.5%",
           padding: 2.5,
+          minWidth: "22%",
           width: 380,
           maxWidth: "93vw",
+          minHeight: "20%",
           height: 290,
           display: "flex",
           flexDirection: "column",
@@ -67,7 +69,6 @@ const AuthPage = () => {
       >
         <TextField
           sx={{ width: "80%" }}
-          required
           autoFocus
           variant="outlined"
           id="emailPhone"
@@ -75,7 +76,6 @@ const AuthPage = () => {
         />
         <TextField
           sx={{ width: "80%" }}
-          required
           variant="outlined"
           id="password"
           label="סיסמא"
