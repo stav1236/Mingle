@@ -1,7 +1,6 @@
-import * as React from "react";
 import { ThemeProvider } from "@mui/material/styles";
 
-import AuthPage from "./Pages/AuthPage";
+import AuthPage from "./Pages/Auth";
 import { useDarkMode } from "./contexts/DarkModeContext";
 
 const App = () => {
