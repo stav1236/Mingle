@@ -41,8 +41,8 @@ const getTheme = (isDarkMode: boolean) => {
         main: "#ff4081",
       },
       background: {
-        default: isDarkMode ? "#121212" : "#FFFFFF",
-        paper: isDarkMode ? "#1E1E1E" : "#F5F5F5",
+        default: isDarkMode ? "#121212" : "#F5F5F5",
+        paper: isDarkMode ? "#1E1E1E" : "#FFFFFF",
       },
       text: {
         primary: isDarkMode ? "#FFFFFF" : "#000000",
