@@ -150,7 +150,7 @@ const RegisterDialog = (props: RegisterDialogProps) => {
           />
           <FormControl fullWidth>
             <FormLabel id="demo-row-radio-buttons-group-label">
-              Gender
+              מין
             </FormLabel>
             <RadioGroup
               row
