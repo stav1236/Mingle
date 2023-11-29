@@ -4,15 +4,17 @@ import {
   CardHeader,
   Avatar,
   CardContent,
-  CardActions,
-  Button,
   Dialog,
   DialogTitle,
   DialogContent,
   TextField,
+  Divider,
+  Box,
+  Typography,
 } from "@mui/material";
 import { useDarkMode } from "@/contexts/DarkModeContext";
-
+import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
+import CommentIcon from "@mui/icons-material/Comment";
 interface PostProps {
   creatorName: string;
   postText: string;
@@ -47,22 +49,47 @@ const Post = ({ creatorName, postText, postImgSrc }: PostProps) => {
         title={creatorName}
         subheader="Posted on: {someDate}"
       />
-      <CardContent sx={{ pt: 0 }}>
+      <CardContent sx={{ pt: 1, pb: 0.5 }}>
         <p>{postText}</p>
-        {postImgSrc && (
-          <img src={postImgSrc} alt="Post" style={{ width: "100%" }} />
-        )}
       </CardContent>
-      <CardActions>
-        <Button onClick={handleLikeClick} color="primary">
-          Like
-        </Button>
-        <Button onClick={handleCommentClick} color="primary">
-          Comment
-        </Button>
-      </CardActions>
-
-      {/* Like Dialog */}
+      {postImgSrc && (
+        <img src={postImgSrc} alt="Post" style={{ width: "100%" }} />
+      )}
+      <Divider />
+      <Box display="flex" justifyContent="space-between" padding={1.2}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <ThumbUpOutlinedIcon />
+          <Typography
+            sx={{ ml: 1 }}
+            variant="subtitle1"
+            onClick={handleLikeClick}
+          >
+            86 לייקים
+          </Typography>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <CommentIcon />
+          <Typography
+            sx={{ ml: 1 }}
+            variant="subtitle1"
+            onClick={handleCommentClick}
+          >
+            20 תגובות
+          </Typography>
+        </Box>
+      </Box>
+      <Divider />
+      <TextField />
       <Dialog open={likeDialogOpen} onClose={handleDialogClose}>
         <DialogTitle>Like Dialog</DialogTitle>
         <DialogContent>
@@ -70,7 +97,6 @@ const Post = ({ creatorName, postText, postImgSrc }: PostProps) => {
         </DialogContent>
       </Dialog>
 
-      {/* Comment Dialog */}
       <Dialog open={commentDialogOpen} onClose={handleDialogClose}>
         <DialogTitle>Comment Dialog</DialogTitle>
         <DialogContent>
