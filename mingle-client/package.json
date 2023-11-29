@@ -20,6 +20,7 @@
     "stylis-plugin-rtl": "^2.1.1"
   },
   "devDependencies": {
+    "@types/node": "^20.10.0",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@types/stylis": "^4.2.4",
