@@ -17,7 +17,7 @@ const TopBar = () => {
   };
 
   return (
-    <AppBar sx={{ mb: 3 }} position="static">
+    <AppBar color="secondary" sx={{ mb: 3 }} position="static">
       <Toolbar
         style={{
           display: "flex",
@@ -28,7 +28,7 @@ const TopBar = () => {
         <IconButton size="large" onClick={handleMenuClick}>
           <MenuIcon />
         </IconButton>
-        <Typography variant="h5" fontWeight="bold">
+        <Typography variant="h4" fontWeight="bold">
           Mingle
         </Typography>
         <IconButton size="large">
