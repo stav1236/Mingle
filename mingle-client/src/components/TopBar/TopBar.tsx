@@ -17,7 +17,7 @@ const TopBar = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar sx={{ mb: 3 }} position="static">
       <Toolbar
         style={{
           display: "flex",

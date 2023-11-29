@@ -6,8 +6,7 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
-import { useDarkMode } from "../../../contexts/DarkModeContext";
-
+import { useDarkMode } from "contexts/DarkModeContext";
 interface TopBarMenuProps extends MenuProps {}
 
 const TopBarMenu = (props: TopBarMenuProps) => {
