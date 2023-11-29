@@ -11,14 +11,17 @@ import {
   Divider,
   Box,
   Typography,
+  IconButton,
 } from "@mui/material";
 import { useDarkMode } from "@/contexts/DarkModeContext";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import CommentIcon from "@mui/icons-material/Comment";
+import SendIcon from "@mui/icons-material/Send";
+
 interface PostProps {
   creatorName: string;
   postText: string;
-  postImgSrc: string;
+  postImgSrc?: string;
 }
 
 const Post = ({ creatorName, postText, postImgSrc }: PostProps) => {
@@ -40,14 +43,14 @@ const Post = ({ creatorName, postText, postImgSrc }: PostProps) => {
   };
 
   return (
-    <Card sx={{ maxWidth: "90vw", width: 600, maxHeight: "90vh" }}>
+    <Card sx={{ maxWidth: "90vw", width: 600 }}>
       <CardHeader
         sx={{ pb: 0 }}
         avatar={
           <Avatar sx={{ bgcolor: `${theme.palette.primary.main}` }}>סמ</Avatar>
         }
         title={creatorName}
-        subheader="Posted on: {someDate}"
+        subheader="פורסם ב8 נוב 2023 "
       />
       <CardContent sx={{ pt: 1, pb: 0.5 }}>
         <p>{postText}</p>
@@ -89,7 +92,18 @@ const Post = ({ creatorName, postText, postImgSrc }: PostProps) => {
         </Box>
       </Box>
       <Divider />
-      <TextField />
+      <TextField
+        label="כתיבת תגובה"
+        fullWidth
+        variant="filled"
+        InputProps={{
+          endAdornment: (
+            <IconButton edge="end">
+              <SendIcon />
+            </IconButton>
+          ),
+        }}
+      />
       <Dialog open={likeDialogOpen} onClose={handleDialogClose}>
         <DialogTitle>Like Dialog</DialogTitle>
         <DialogContent>
