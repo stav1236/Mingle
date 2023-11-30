@@ -43,7 +43,7 @@ const Post = ({ creatorName, postText, postImgSrc }: PostProps) => {
   };
 
   return (
-    <Card sx={{ maxWidth: "90vw", width: 600 }}>
+    <Card sx={{ maxWidth: "90vw", width: 600, m: 1.5 }}>
       <CardHeader
         sx={{ pb: 0 }}
         avatar={

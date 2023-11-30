@@ -2,19 +2,12 @@ import {
   Box,
   Button,
   Dialog,
-  DialogActions,
-  DialogContent,
   DialogProps,
-  DialogTitle,
   FormControl,
   FormControlLabel,
   FormLabel,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
   Radio,
   RadioGroup,
-  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -31,7 +24,7 @@ const RegisterDialog = (props: RegisterDialogProps) => {
   const [password, setPassword] = useState("");
   const [passwordValidate, setPasswordValidate] = useState("");
   const [birthdate, setBirthdate] = useState("");
-  const [gender, setGender] = useState("");
+  const [gender] = useState("");
 
   const handleRegister = () => {
     console.log({
@@ -149,9 +142,7 @@ const RegisterDialog = (props: RegisterDialogProps) => {
             onChange={(e) => setBirthdate(e.target.value)}
           />
           <FormControl fullWidth>
-            <FormLabel id="demo-row-radio-buttons-group-label">
-              מין
-            </FormLabel>
+            <FormLabel id="demo-row-radio-buttons-group-label">מגדר</FormLabel>
             <RadioGroup
               row
               aria-labelledby="demo-row-radio-buttons-group-label"

@@ -1,9 +1,17 @@
+import AddPost from "@/components/UI/AddPost";
 import { Box } from "@mui/material";
 import Post from "components/UI/Post";
 
 const Main = () => {
   return (
-    <Box sx={{ display: "flex", justifyContent: "center" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <AddPost />
       <Post
         creatorName={"סתיו מאור"}
         postText={"ניסיון"}
