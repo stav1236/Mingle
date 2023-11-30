@@ -1,14 +1,16 @@
 import { ThemeProvider } from "@mui/material/styles";
 
-import MediaPage from "./Pages/Media";
+import MainPage from "./Pages/Main";
 import { useDarkMode } from "./contexts/DarkModeContext";
+import AuthPage from "./Pages/Auth";
 
 const App = () => {
   const { theme } = useDarkMode();
 
   return (
     <ThemeProvider theme={theme}>
-      <MediaPage />
+      {/* <AuthPage /> */}
+      <MainPage />
     </ThemeProvider>
   );
 };
