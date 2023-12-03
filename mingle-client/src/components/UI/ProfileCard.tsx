@@ -1,7 +1,9 @@
 import { useDarkMode } from "@/contexts/DarkModeContext";
 import { Avatar, Card, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import { useNavigate } from "react-router-dom";
 const ProfileCard = () => {
+  const navigate = useNavigate();
   const { theme } = useDarkMode();
 
   return (
@@ -19,7 +21,12 @@ const ProfileCard = () => {
         m: 1.5,
       }}
     >
-      <EditIcon sx={{ position: "absolute", top: 10, right: 15 }} />
+      <span
+        onClick={() => navigate("/settings")}
+        style={{ cursor: "pointer", position: "absolute", top: 10, left: 15 }}
+      >
+        <EditIcon />
+      </span>
       <Avatar
         sx={{
           bgcolor: `${theme.palette.primary.main}`,
