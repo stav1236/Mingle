@@ -64,6 +64,11 @@ const AddPost: React.FC<AddPostCardProps> = () => {
             סמ
           </Avatar>
           <TextField
+            sx={{
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderRadius: 10,
+              },
+            }}
             multiline
             fullWidth
             autoFocus={false}

@@ -1,3 +1,4 @@
+import { useAuth } from "@/contexts/AuthContext";
 import { Card, TextField, Button } from "@mui/material";
 
 interface LoginFormProps {
@@ -5,6 +6,8 @@ interface LoginFormProps {
 }
 
 const LoginForm = (props: LoginFormProps) => {
+  const { login } = useAuth();
+
   return (
     <Card
       sx={{
@@ -36,6 +39,7 @@ const LoginForm = (props: LoginFormProps) => {
         type="password"
       />
       <Button
+        onClick={login}
         sx={{ width: "70%" }}
         fullWidth
         variant="contained"
