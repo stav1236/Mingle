@@ -7,28 +7,34 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 import { useDarkMode } from "contexts/DarkModeContext";
-interface TopBarMenuProps extends MenuProps {}
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+interface TopBarMenuProps extends MenuProps {
+  handleMenuClose: () => void;
+}
 
 const TopBarMenu = (props: TopBarMenuProps) => {
+  const { logout } = useAuth();
   const { toggleDarkMode, isDarkMode } = useDarkMode();
+  const navigate = useNavigate();
 
   const handleMenuItemClick = (page: string) => {
-    console.log(`Navigating to ${page}`);
-    props?.onClose;
+    props.handleMenuClose();
+    navigate(page);
   };
 
   return (
     <Menu {...props}>
       <Box sx={{ width: 180 }}>
-        <MenuItem onClick={() => handleMenuItemClick("HomePage")}>
+        <MenuItem onClick={() => handleMenuItemClick("/profile/StavMaor")}>
           <PersonIcon sx={{ m: 0.7 }} />
           הפרופיל שלי
         </MenuItem>
-        <MenuItem onClick={() => handleMenuItemClick("ProfilePage")}>
+        <MenuItem onClick={() => handleMenuItemClick("/home")}>
           <HomeIcon sx={{ m: 0.7 }} />
           דף הבית
         </MenuItem>
-        <MenuItem onClick={() => handleMenuItemClick("SettingsPage")}>
+        <MenuItem onClick={() => handleMenuItemClick("/settings")}>
           <SettingsOutlinedIcon sx={{ m: 0.7 }} />
           הגדרות
         </MenuItem>
@@ -46,7 +52,7 @@ const TopBarMenu = (props: TopBarMenuProps) => {
           )}
         </MenuItem>
         <Divider />
-        <MenuItem onClick={() => handleMenuItemClick("LogoutPage")}>
+        <MenuItem onClick={logout}>
           <LogoutIcon sx={{ m: 0.7 }} />
           התנתקות
         </MenuItem>

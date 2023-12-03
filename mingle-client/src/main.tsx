@@ -9,6 +9,7 @@ import { prefixer } from "stylis";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import { DarkModeProvider } from "./contexts/DarkModeContext.tsx";
+import { AuthProvider } from "./contexts/AuthContext.tsx";
 
 const theme = createTheme({
   direction: "rtl",
@@ -23,9 +24,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>
         <DarkModeProvider>
-          <div dir="rtl">
-            <App />
-          </div>
+          <AuthProvider>
+            <div dir="rtl">
+              <App />
+            </div>
+          </AuthProvider>
         </DarkModeProvider>
       </ThemeProvider>
     </CacheProvider>
