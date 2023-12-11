@@ -3,6 +3,7 @@ import path from "path";
 
 import postRouter from "./routes/PostRH";
 import userRouter from "./routes/UserRH";
+import logger from "./common/config/logger";
 
 const app = express();
 const port = 3000;
@@ -12,7 +13,7 @@ app.use(express.static("mingle-client/dist"));
 
 app.use((req, res, next) => {
   if (req.path.startsWith("/api")) {
-    console.log(`Received ${req.method} request at ${req.path}`);
+    logger.info(`Received ${req.method} request at ${req.path}`);
   }
   next();
 });
@@ -29,5 +30,5 @@ app.get("*", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  logger.info(`Server is running at http://localhost:${port}`);
 });
