@@ -1,21 +1,31 @@
 import express from "express";
 import path from "path";
 
+import postRouter from "./routes/PostRH";
+import userRouter from "./routes/UserRH";
+
 const app = express();
 const port = 3000;
 
-// Serve static files from the "mingle-client/dist" directory
+app.use(express.json());
 app.use(express.static("mingle-client/dist"));
 
-// Your existing API endpoint
-app.get("/api/data", (req, res) => {
-  const responseData = { message: "This is a sample REST response" };
-  res.json(responseData);
+app.use((req, res, next) => {
+  if (req.path.startsWith("/api")) {
+    console.log(`Received ${req.method} request at ${req.path}`);
+  }
+  next();
 });
 
-// Handle requests to all routes by serving the main HTML file
+app.use("/api/posts", postRouter);
+app.use("/api/users", userRouter);
+
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve("mingle-client/dist", "index.html"));
+  if (!req.path.startsWith("/api")) {
+    res.sendFile(path.resolve("mingle-client/dist", "index.html"));
+  } else {
+    res.status(404).sendFile(path.resolve("src/assets/pages/404.html"));
+  }
 });
 
 app.listen(port, () => {
