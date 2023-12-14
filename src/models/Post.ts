@@ -36,7 +36,11 @@ const postSchema = new Schema<Post>(
     ],
     likes: [{ userId: { type: Schema.Types.ObjectId, ref: "User" } as any }],
   },
-  { timestamps: true }
+  {
+    timestamps: {
+      currentTime: () => new Date(Date.now() + 2 * 60 * 60 * 1000),
+    },
+  }
 );
 
 postSchema.index({ updatedAt: -1, creatorId: 1 });
