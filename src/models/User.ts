@@ -1,8 +1,9 @@
+import { UUID } from "bson";
 import mongoose, { Schema, Document } from "mongoose";
 import { GENDERS, Gender } from "./Gender";
 
 interface User extends Document {
-  userName: string;
+  uuid: UUID;
   firstName: string;
   lastName: string;
   email: string;
@@ -12,7 +13,7 @@ interface User extends Document {
 }
 
 const userSchema = new Schema<User>({
-  userName: { type: String, required: true, unique: true },
+  uuid: { type: UUID, required: true, unique: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },

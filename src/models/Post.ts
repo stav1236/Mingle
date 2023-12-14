@@ -23,7 +23,6 @@ const postSchema = new Schema<Post>(
   {
     text: String,
     imgSrc: String,
-    creationTime: { type: Date, default: Date.now },
     creatorId: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -40,7 +39,7 @@ const postSchema = new Schema<Post>(
   { timestamps: true }
 );
 
-postSchema.index({ creationTime: -1, creatorId: 1 });
+postSchema.index({ updatedAt: -1, creatorId: 1 });
 
 const Post = mongoose.model<Post>("Post", postSchema);
 
