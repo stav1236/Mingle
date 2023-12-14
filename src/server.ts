@@ -5,8 +5,21 @@ import postRouter from "./routes/PostRH";
 import userRouter from "./routes/UserRH";
 import logger from "./common/config/logger";
 
+import dotenv from "dotenv";
+import connectToDatabase from "./data/base";
+
+dotenv.config();
+
 const app = express();
 const port = 3000;
+const DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
+
+if (!DB_CONNECTION_STRING) {
+  logger.error("MongoDB connection string not provided in the .env file");
+  process.exit(1);
+}
+
+connectToDatabase(DB_CONNECTION_STRING);
 
 app.use(express.json());
 app.use(express.static("mingle-client/dist"));
