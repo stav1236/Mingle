@@ -5,11 +5,14 @@ import express from "express";
 
 import postRouter from "./routes/PostRH";
 import userRouter from "./routes/UserRH";
-import connectToDatabase from "./data/base";
-import logger from "./common/config/logger";
 import authRouter from "./routes/AuthRH";
+import logger from "./common/config/logger";
+import connectToDatabase from "./data/Base";
 
 dotenv.config();
+process.on("uncaughtException", (err) => {
+  logger.error("uncaughtException", err);
+});
 
 const app = express();
 const port = 3000;
