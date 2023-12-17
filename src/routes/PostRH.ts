@@ -1,9 +1,10 @@
 import express from "express";
-import authenticate from "../common/middleware/authMiddleware";
+import authMiddleware from "../common/middleware/authMiddleware";
 
 const postRouter = express.Router();
+postRouter.use(authMiddleware);
 
-postRouter.get("/", authenticate, (req, res) => {
+postRouter.get("/", (req, res) => {
   res.send("Get all posts");
 });
 

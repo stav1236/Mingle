@@ -1,6 +1,8 @@
 import express from "express";
+import authMiddleware from "../common/middleware/authMiddleware";
 
 const userRouter = express.Router();
+userRouter.use(authMiddleware);
 
 userRouter.get("/:userId", (req, res) => {
   const userId = req.params.userId;
