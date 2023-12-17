@@ -7,6 +7,7 @@ import postRouter from "./routes/PostRH";
 import userRouter from "./routes/UserRH";
 import connectToDatabase from "./data/base";
 import logger from "./common/config/logger";
+import authRouter from "./routes/AuthRH";
 
 dotenv.config();
 
@@ -32,8 +33,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/posts", postRouter);
+app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
+app.use("/api/posts", postRouter);
 
 app.get("*", (req, res) => {
   if (!req.path.startsWith("/api")) {
