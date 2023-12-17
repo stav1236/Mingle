@@ -1,12 +1,12 @@
-import express from "express";
 import path from "path";
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
 
 import postRouter from "./routes/PostRH";
 import userRouter from "./routes/UserRH";
-import logger from "./common/config/logger";
-
-import dotenv from "dotenv";
 import connectToDatabase from "./data/base";
+import logger from "./common/config/logger";
 
 dotenv.config();
 
@@ -21,6 +21,7 @@ if (!DB_CONNECTION_STRING) {
 
 connectToDatabase(DB_CONNECTION_STRING);
 
+app.use(cors());
 app.use(express.json());
 app.use(express.static("mingle-client/dist"));
 

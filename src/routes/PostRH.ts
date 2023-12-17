@@ -1,9 +1,10 @@
 // postRoutes.js
 import express from "express";
+import authenticate from "../common/middleware/authentication";
 
 const postRouter = express.Router();
 
-postRouter.get("/", (req, res) => {
+postRouter.get("/", authenticate, (req, res) => {
   // Handle GET request for all posts
   res.send("Get all posts");
 });
