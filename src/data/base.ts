@@ -3,10 +3,7 @@ import logger from "../common/config/logger";
 
 const connectToDatabase = async (dbConnectionString: string): Promise<void> => {
   try {
-    const options: ConnectOptions = {
-      // useNewUrlParser: true,
-      // useUnifiedTopology: true,
-    } as ConnectOptions;
+    const options: ConnectOptions = {} as ConnectOptions;
 
     await mongoose.connect(dbConnectionString, options);
 
