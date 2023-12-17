@@ -3,7 +3,7 @@ import User from "../../data/models/User";
 
 const authMiddleware = async (req: any, res: any, next: any) => {
   const refreshToken = req.headers["refresh-token"];
-  const accessToken = req.headers.authorization.split(" ")[1];
+  const accessToken = req.headers.authorization?.split(" ")[1];
 
   if (!accessToken && !refreshToken) {
     return res.status(401).json({ message: "Invalid credentials" });
