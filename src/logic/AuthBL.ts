@@ -100,3 +100,49 @@ export const logout = async (req: any, res: any) => {
     }
   );
 };
+
+export const refreshToken = async (req: any, res: any) => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) {
+    return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  jwt.verify(
+    refreshToken,
+    process.env.REFRESH_TOKEN_SECRET,
+    async (err: any, userInfo: any) => {
+      if (err) return res.status(403).sende(err.message);
+      const userId = userInfo._id;
+
+      try {
+        const user = await User.findById(userId);
+        if (!user) return res.status(403).send("invalid credentials");
+        if (!user.tokens?.includes(refreshToken)) {
+          user.tokens = [];
+          await user.save();
+          return res.status(403).send("invalid credentials");
+        }
+
+        const newAccessToken = jwt.sign(
+          { _id: user._id },
+          process.env.ACCESS_TOKEN_SECRET as Secret,
+          { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
+        );
+        const newRefreshToken = jwt.sign(
+          { _id: user._id },
+          process.env.REFRESH_TOKEN_SECRET as Secret
+        );
+
+        user.tokens[user.tokens.indexOf(refreshToken)] = newRefreshToken;
+        await user.save();
+
+        res
+          .status(200)
+          .send({ accessToken: newAccessToken, refreshToken: newAccessToken });
+      } catch (err: any) {
+        res.status(403).sende(err.message);
+      }
+    }
+  );
+};
