@@ -7,7 +7,7 @@ import postRouter from "./routes/PostRH";
 import userRouter from "./routes/UserRH";
 import authRouter from "./routes/AuthRH";
 import logger from "./common/config/logger";
-import connectToDatabase from "./data/Base";
+import connectToDatabase from "./data/base";
 
 dotenv.config();
 process.on("uncaughtException", (err) => {

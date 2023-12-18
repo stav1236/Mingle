@@ -1,3 +1,4 @@
+import { nonTokenAxios } from "@/utilities/axios";
 import {
   Box,
   Button,
@@ -12,6 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { GENDERS, Gender } from "@/models/Gender";
 
 interface RegisterDialogProps extends DialogProps {
   onClose: () => void;
@@ -20,24 +22,32 @@ interface RegisterDialogProps extends DialogProps {
 const RegisterDialog = (props: RegisterDialogProps) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [phoneNumberEmail, setPhoneNumberEmail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordValidate, setPasswordValidate] = useState("");
-  const [birthdate, setBirthdate] = useState("");
-  const [gender] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+  const [gender, setGender] = useState(GENDERS.MALE.toString());
 
   const handleRegister = () => {
-    console.log({
+    const userData = {
       firstName,
       lastName,
-      phoneNumberEmail,
+      email,
       password,
-      passwordValidate,
-      birthdate,
+      birthDate,
       gender,
-    });
+    };
 
-    props.onClose;
+    nonTokenAxios
+      .post("/auth/register/", userData)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    props.onClose();
   };
 
   return (
@@ -99,8 +109,8 @@ const RegisterDialog = (props: RegisterDialogProps) => {
             }}
             label="אמייל / טלפון"
             fullWidth
-            value={phoneNumberEmail}
-            onChange={(e) => setPhoneNumberEmail(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             sx={{
@@ -138,19 +148,21 @@ const RegisterDialog = (props: RegisterDialogProps) => {
             fullWidth
             type="date"
             label="תאריך לידה"
-            value={birthdate}
-            onChange={(e) => setBirthdate(e.target.value)}
+            value={birthDate}
+            onChange={(e) => setBirthDate(e.target.value)}
           />
           <FormControl fullWidth>
             <FormLabel id="demo-row-radio-buttons-group-label">מגדר</FormLabel>
             <RadioGroup
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
               row
               aria-labelledby="demo-row-radio-buttons-group-label"
               name="row-radio-buttons-group"
             >
-              <FormControlLabel value="זכר" control={<Radio />} label="זכר" />
-              <FormControlLabel value="נקבה" control={<Radio />} label="נקבה" />
-              <FormControlLabel value="אחר" control={<Radio />} label="אחר" />
+              {Object.values(GENDERS).map((g) => (
+                <FormControlLabel value={g} control={<Radio />} label={g} />
+              ))}
             </RadioGroup>
           </FormControl>
         </Box>
