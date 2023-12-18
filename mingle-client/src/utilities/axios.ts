@@ -1,5 +1,3 @@
-// axiosInstance.ts
-
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import {
   getAccessToken,
@@ -9,7 +7,7 @@ import {
 } from "./tokenService";
 
 const mingleAxios: AxiosInstance = axios.create({
-  baseURL: `${process.env.REACT_APP_SERVER_URL}/api`,
+  baseURL: import.meta.env.VITE_APP_API_URL,
 });
 
 mingleAxios.interceptors.request.use(
