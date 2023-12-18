@@ -1,5 +1,4 @@
 import jwt, { Secret } from "jsonwebtoken";
-import User from "../data/models/User";
 
 const authMiddleware = async (req: any, res: any, next: any) => {
   const accessToken = req.headers.authorization?.split(" ")[1];
@@ -10,7 +9,7 @@ const authMiddleware = async (req: any, res: any, next: any) => {
 
   jwt.verify(
     accessToken,
-    process.env.ACCESS_TOKEN_SECRET,
+    process.env.ACCESS_TOKEN_SECRET as Secret,
     (err: any, user: any) => {
       if (err) return res.status(403).sende(err.message);
       req.user = user;

@@ -6,6 +6,10 @@ import {
   saveRefreshToken,
 } from "./tokenService";
 
+export const nonTokenAxios: AxiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_APP_API_URL,
+});
+
 const mingleAxios: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,
 });

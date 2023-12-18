@@ -110,7 +110,7 @@ export const refreshToken = async (req: any, res: any) => {
 
   jwt.verify(
     refreshToken,
-    process.env.REFRESH_TOKEN_SECRET,
+    process.env.REFRESH_TOKEN_SECRET as Secret,
     async (err: any, userInfo: any) => {
       if (err) return res.status(403).sende(err.message);
       const userId = userInfo._id;
