@@ -27,7 +27,7 @@ connectToDatabase(DB_CONNECTION_STRING);
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static("mingle-client/dist"));
+app.use(express.static("client/dist"));
 
 app.use((req, res, next) => {
   if (req.path.startsWith("/api")) {
@@ -42,7 +42,7 @@ app.use("/api/posts", postRouter);
 
 app.get("*", (req, res) => {
   if (!req.path.startsWith("/api")) {
-    res.sendFile(path.resolve("mingle-client/dist", "index.html"));
+    res.sendFile(path.resolve("client/dist", "index.html"));
   } else {
     res.status(404).sendFile(path.resolve("src/assets/pages/404.html"));
   }
