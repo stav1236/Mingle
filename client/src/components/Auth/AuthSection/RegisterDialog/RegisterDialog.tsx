@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { GENDERS, Gender } from "@/models/Gender";
+import { GENDERS } from "@/models/Gender";
 
 interface RegisterDialogProps extends DialogProps {
   onClose: () => void;
