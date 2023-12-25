@@ -40,10 +40,10 @@ const RegisterDialog = (props: RegisterDialogProps) => {
 
     nonTokenAxios
       .post("/auth/register/", userData)
-      .then((response) => {
+      .then((response: any) => {
         console.log(response.data);
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error(error);
       });
 
@@ -161,7 +161,12 @@ const RegisterDialog = (props: RegisterDialogProps) => {
               name="row-radio-buttons-group"
             >
               {Object.values(GENDERS).map((g) => (
-                <FormControlLabel value={g} control={<Radio />} label={g} />
+                <FormControlLabel
+                  key={g}
+                  value={g}
+                  control={<Radio />}
+                  label={g}
+                />
               ))}
             </RadioGroup>
           </FormControl>

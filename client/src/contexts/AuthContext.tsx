@@ -1,4 +1,10 @@
-// AuthContext.tsx
+import {
+  getRefreshToken,
+  removeAccessToken,
+  removeRefreshToken,
+  saveAccessToken,
+  saveRefreshToken,
+} from "@/utilities/tokenService";
 import {
   createContext,
   ReactNode,
@@ -6,11 +12,15 @@ import {
   useEffect,
   useState,
 } from "react";
+import User from "@/models/User";
+import mingleAxios, { nonTokenAxios } from "@/utilities/axios";
 
 interface AuthContextProps {
+  user?: User;
   isLogin: boolean;
-  login: () => void;
+  login: (email: string, password: string) => void;
   logout: () => void;
+  clearAuth: () => void;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -20,24 +30,69 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<User>();
   const [isLogin, setIsLogin] = useState<boolean>(() => {
-    const storedIsLogin = localStorage.getItem("isLogin");
-    return storedIsLogin ? JSON.parse(storedIsLogin) : false;
+    const lastUser = localStorage.getItem("_id");
+    return !!lastUser;
   });
-  const login = () => {
-    setIsLogin(true);
+
+  useEffect(() => {
+    const getUserById = async () => {
+      try {
+        if (isLogin) {
+          const userid = localStorage.getItem("_id");
+          const res = await mingleAxios.get(`users/${userid}`);
+          setUser(res.data as User);
+        } else {
+          localStorage.removeItem("_id");
+          setUser(undefined);
+        }
+      } catch (error) {
+        clearAuth();
+        console.error("Error fetching user data:", error);
+      }
+    };
+    getUserById();
+  }, [isLogin]);
+
+  const login = (email: string, password: string) => {
+    nonTokenAxios
+      .post("/auth/login/", { email, password })
+      .then((response: any) => {
+        saveAccessToken(response.data.accessToken);
+        saveRefreshToken(response.data.refreshToken);
+        localStorage.setItem("_id", response.data._id);
+        setIsLogin(true);
+      })
+      .catch((error: any) => {
+        clearAuth();
+        console.error(error);
+      });
   };
 
   const logout = () => {
-    setIsLogin(false);
+    nonTokenAxios
+      .post("/auth/logout/", null, {
+        headers: {
+          Authorization: `Bearer ${getRefreshToken()}`,
+        },
+      })
+      .then(() => clearAuth())
+      .catch((error: any) => {
+        clearAuth();
+        console.error(error);
+      });
   };
 
-  useEffect(() => {
-    localStorage.setItem("isLogin", JSON.stringify(isLogin));
-  }, [isLogin]);
+  const clearAuth = () => {
+    setIsLogin(false);
+    removeAccessToken();
+    removeRefreshToken();
+    localStorage.removeItem("_id");
+  };
 
   return (
-    <AuthContext.Provider value={{ isLogin, login, logout }}>
+    <AuthContext.Provider value={{ user, isLogin, login, logout, clearAuth }}>
       {children}
     </AuthContext.Provider>
   );
