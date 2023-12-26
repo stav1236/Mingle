@@ -10,6 +10,19 @@ export const nonTokenAxios: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,
 });
 
+nonTokenAxios.interceptors.response.use(
+  (response: AxiosResponse) => {
+    return response;
+  },
+  async (error) => {
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      window.location.href = "/Auth";
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 const mingleAxios: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,
 });
@@ -60,7 +73,7 @@ mingleAxios.interceptors.response.use(
         }
       }
 
-      redirectToLoginPage();
+      window.location.href = "/Auth";
     }
 
     return Promise.reject(error);
@@ -71,7 +84,7 @@ const refreshAccessToken = async (
   refreshToken: string
 ): Promise<string | null> => {
   try {
-    const response = await mingleAxios.post("auth/refresh-token", {
+    const response = await nonTokenAxios.post("auth/refresh-token", {
       refreshToken,
     });
 
@@ -82,12 +95,6 @@ const refreshAccessToken = async (
   } catch (error) {
     throw error;
   }
-};
-
-// Function to redirect to the login page
-const redirectToLoginPage = () => {
-  // Implement logic to redirect to the login page
-  // Example: use React Router or other navigation mechanisms
 };
 
 export default mingleAxios;

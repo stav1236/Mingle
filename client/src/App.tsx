@@ -42,6 +42,7 @@ const App = () => {
             />
             <Route path="/home" element={isLogin ? <Media /> : <Auth />} />
             <Route path="/" element={isLogin ? <Media /> : <Auth />} />
+            <Route path="/Auth" element={<Auth />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Box>

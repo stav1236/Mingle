@@ -62,7 +62,7 @@ export const login = async (req: any, res: any) => {
     else user.tokens.push(refreshToken);
     await user.save();
 
-    res.json({ accessToken, refreshToken });
+    res.json({ accessToken, refreshToken, _id: user._id });
   } catch (error) {
     logger.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -70,8 +70,7 @@ export const login = async (req: any, res: any) => {
 };
 
 export const logout = async (req: any, res: any) => {
-  const authHeaders = req.headers["authorization"];
-  const token = authHeaders.split(" ")[1];
+  const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json({ message: "Invalid credentials" });
 
   jwt.verify(
@@ -112,7 +111,7 @@ export const refreshToken = async (req: any, res: any) => {
     refreshToken,
     process.env.REFRESH_TOKEN_SECRET as Secret,
     async (err: any, userInfo: any) => {
-      if (err) return res.status(403).sende(err.message);
+      if (err) return res.status(403).send(err.message);
       const userId = userInfo._id;
 
       try {
@@ -141,7 +140,7 @@ export const refreshToken = async (req: any, res: any) => {
           .status(200)
           .send({ accessToken: newAccessToken, refreshToken: newAccessToken });
       } catch (err: any) {
-        res.status(403).sende(err.message);
+        res.status(403).send(err.message);
       }
     }
   );
