@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Card, TextField, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormProps {
   openRegisterDialog: () => void;
@@ -8,11 +9,13 @@ interface LoginFormProps {
 
 const LoginForm = (props: LoginFormProps) => {
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleLogin = () => {
     login(email, password);
+    navigate("/");
   };
 
   return (

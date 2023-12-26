@@ -10,6 +10,19 @@ export const nonTokenAxios: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,
 });
 
+nonTokenAxios.interceptors.response.use(
+  (response: AxiosResponse) => {
+    return response;
+  },
+  async (error) => {
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      window.location.href = "/Auth";
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 const mingleAxios: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,
 });
@@ -59,6 +72,8 @@ mingleAxios.interceptors.response.use(
           console.error("Error refreshing token:", refreshError);
         }
       }
+
+      window.location.href = "/Auth";
     }
 
     return Promise.reject(error);
