@@ -12,7 +12,7 @@ const createMulterMiddleware = (type: string) => {
       },
     }),
     limits: {
-      fileSize: 1024 * 1023 * 2,
+      fileSize: 1024 * 1024 * 2,
     },
     fileFilter: (req: any, file: any, cb: any) => {
       const isImageType =
