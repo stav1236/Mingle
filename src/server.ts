@@ -27,6 +27,7 @@ connectToDatabase(DB_CONNECTION_STRING);
 
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 app.use(express.static("client/dist"));
 
 app.use((req, res, next) => {

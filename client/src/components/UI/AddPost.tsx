@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useDropzone, FileWithPath } from "react-dropzone";
 import { useDarkMode } from "@/contexts/DarkModeContext";
+import mingleAxios from "@/utilities/axios";
 
 interface AddPostCardProps {
   //   avatarSrc: string; // URL or path to the avatar image
@@ -28,13 +29,11 @@ const AddPost: React.FC<AddPostCardProps> = () => {
 
   const handleDialogClose = () => {
     setDialogOpen(false);
-    // Reset any temporary state when the dialog is closed
     setPostContent("");
     setUploadedImage(null);
   };
 
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
-    // For simplicity, this example assumes only one image is uploaded
     const image = acceptedFiles[0];
     setUploadedImage(image);
   }, []);
@@ -48,12 +47,25 @@ const AddPost: React.FC<AddPostCardProps> = () => {
     setPostContent(event.target.value);
   };
 
-  const handleAddPost = () => {
-    // Handle adding the post with postContent and uploadedImage
-    // You may want to send this data to a server or update your state accordingly.
-    console.log("Post Content:", postContent);
-    console.log("Uploaded Image:", uploadedImage);
-    handleDialogClose(); // Close the dialog after handling the post
+  const handleAddPost = async () => {
+    const formData = new FormData();
+    formData.append("text", postContent);
+    formData.append("image", uploadedImage!);
+
+    try {
+      await mingleAxios.post("/posts", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setPostContent("");
+      setUploadedImage(null);
+    } catch (error) {
+      console.error("Error submitting data:", error);
+    }
+
+    // handleDialogClose();
   };
 
   return (

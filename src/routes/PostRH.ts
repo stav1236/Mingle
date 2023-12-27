@@ -1,5 +1,7 @@
 import express from "express";
 import authMiddleware from "../middleware/authMiddleware";
+import { createPost } from "../logic/PostBL";
+import upload from "../middleware/upload";
 
 const postRouter = express.Router();
 postRouter.use(authMiddleware);
@@ -13,10 +15,7 @@ postRouter.get("/:postId", (req, res) => {
   res.send(`Get post with id ${postId}`);
 });
 
-postRouter.post("/", (req, res) => {
-  const postData = req.body;
-  res.send(`Create new post: ${JSON.stringify(postData)}`);
-});
+postRouter.post("/", upload.single("image"), createPost);
 
 postRouter.put("/:postId", (req, res) => {
   const postId = req.params.postId;

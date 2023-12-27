@@ -10,9 +10,9 @@ const authMiddleware = async (req: any, res: any, next: any) => {
   jwt.verify(
     accessToken,
     process.env.ACCESS_TOKEN_SECRET as Secret,
-    (err: any, user: any) => {
+    (err: any, userInfo: any) => {
       if (err) return res.status(403).send(err.message);
-      req.user = user;
+      req.userId = userInfo._id;
       next();
     }
   );
