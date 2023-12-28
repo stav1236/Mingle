@@ -136,9 +136,11 @@ export const refreshToken = async (req: any, res: any) => {
         user.tokens[user.tokens.indexOf(refreshToken)] = newRefreshToken;
         await user.save();
 
-        res
-          .status(200)
-          .send({ accessToken: newAccessToken, refreshToken: newAccessToken });
+        res.status(200).send({
+          accessToken: newAccessToken,
+          refreshToken: newRefreshToken,
+          _id: user._id,
+        });
       } catch (err: any) {
         res.status(403).send(err.message);
       }

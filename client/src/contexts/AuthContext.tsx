@@ -47,8 +47,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           localStorage.removeItem("_id");
           setUser(undefined);
         }
-      } catch (error) {
-        clearAuth();
+      } catch (error: any) {
+        if (error?.response?.status !== 403) clearAuth();
         console.error("Error fetching user data:", error);
       }
     };
