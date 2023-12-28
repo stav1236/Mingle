@@ -10,6 +10,8 @@ export const nonTokenAxios: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_API_URL,
 });
 
+let isAlreadyAskForToken = false;
+
 nonTokenAxios.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
@@ -30,12 +32,10 @@ const mingleAxios: AxiosInstance = axios.create({
 mingleAxios.interceptors.request.use(
   async (config: any) => {
     const accessToken = getAccessToken();
-    if (accessToken) {
-      config.headers = {
-        ...config.headers,
-        Authorization: `Bearer ${accessToken}`,
-      };
-    }
+    config.headers = {
+      ...config.headers,
+      Authorization: `Bearer ${accessToken}`,
+    };
 
     return config;
   },
@@ -61,19 +61,24 @@ mingleAxios.interceptors.response.use(
 
       if (refreshToken) {
         try {
-          const refreshedToken = await refreshAccessToken(refreshToken);
+          if (!isAlreadyAskForToken) {
+            isAlreadyAskForToken = true;
+            const refreshedToken = await refreshAccessToken(refreshToken);
+            if (refreshedToken) {
+              originalRequest.headers.Authorization = `Bearer ${refreshedToken}`;
+              saveAccessToken(refreshedToken);
 
-          if (refreshedToken) {
-            originalRequest.headers.Authorization = `Bearer ${refreshedToken}`;
-            saveAccessToken(refreshedToken);
-            return mingleAxios(originalRequest);
+              isAlreadyAskForToken = false;
+              return mingleAxios(originalRequest);
+            }
           }
         } catch (refreshError) {
+          isAlreadyAskForToken = false;
           console.error("Error refreshing token:", refreshError);
         }
+      } else {
+        window.location.href = "/Auth";
       }
-
-      window.location.href = "/Auth";
     }
 
     return Promise.reject(error);
@@ -90,6 +95,7 @@ const refreshAccessToken = async (
 
     saveAccessToken(response.data.accessToken);
     saveRefreshToken(response.data.refreshToken);
+    localStorage.setItem("_id", response.data._id);
 
     return response.data.accessToken;
   } catch (error) {
