@@ -1,5 +1,4 @@
 import multer from "multer";
-import sharp from "sharp";
 
 const createMulterMiddleware = (type: string) => {
   return multer({
@@ -27,20 +26,3 @@ const createMulterMiddleware = (type: string) => {
 
 export const postUpload = createMulterMiddleware("posts");
 export const profileUpload = createMulterMiddleware("avatars");
-
-export const resizeImage = (req: any, res: any, next: any) => {
-  if (!req.file) {
-    return next();
-  }
-
-  sharp(req.file.path)
-    .resize({ width: 300, height: 300 })
-    .toFile(`uploads/resized/${req.file.filename}`, (err: any) => {
-      if (err) {
-        return next(err);
-      }
-
-      req.file.path = `uploads/resized/${req.file.filename}`;
-      next();
-    });
-};
