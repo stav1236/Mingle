@@ -17,14 +17,20 @@ import { useDarkMode } from "@/contexts/DarkModeContext";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import CommentIcon from "@mui/icons-material/Comment";
 import SendIcon from "@mui/icons-material/Send";
+import { Like, Comment } from "@/models/Post";
 
 interface PostProps {
-  creatorName: string;
-  postText: string;
-  postImgSrc?: string;
+  _id: string;
+  text?: string;
+  imgSrc?: string;
+  creatorId: string;
+  comments: Comment[];
+  likes: Like[];
+  updatedAt: string;
+  createdAt: string;
 }
 
-const Post = ({ creatorName, postText, postImgSrc }: PostProps) => {
+const Post = (props: PostProps) => {
   const { theme } = useDarkMode();
   const [likeDialogOpen, setLikeDialogOpen] = useState(false);
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
@@ -49,14 +55,18 @@ const Post = ({ creatorName, postText, postImgSrc }: PostProps) => {
         avatar={
           <Avatar sx={{ bgcolor: `${theme.palette.primary.main}` }}>סמ</Avatar>
         }
-        title={creatorName}
-        subheader="פורסם ב8 נוב 2023 "
+        title={props.creatorId}
+        subheader={props.createdAt}
       />
       <CardContent sx={{ pt: 1, pb: 0.5 }}>
-        <p>{postText}</p>
+        <p>{props.text}</p>
       </CardContent>
-      {postImgSrc && (
-        <img src={postImgSrc} alt="Post" style={{ width: "100%" }} />
+      {props.imgSrc && (
+        <img
+          src={`${import.meta.env.VITE_APP_UPLOADS_URL ?? ""}${props.imgSrc}`}
+          alt="Post"
+          style={{ width: "100%" }}
+        />
       )}
       <Divider />
       <Box display="flex" justifyContent="space-between" padding={1.2}>
@@ -72,7 +82,7 @@ const Post = ({ creatorName, postText, postImgSrc }: PostProps) => {
             variant="subtitle1"
             onClick={handleLikeClick}
           >
-            86 לייקים
+            {props.likes.length} לייקים
           </Typography>
         </Box>
         <Box
@@ -87,7 +97,7 @@ const Post = ({ creatorName, postText, postImgSrc }: PostProps) => {
             variant="subtitle1"
             onClick={handleCommentClick}
           >
-            20 תגובות
+            {props.comments.length} תגובות
           </Typography>
         </Box>
       </Box>

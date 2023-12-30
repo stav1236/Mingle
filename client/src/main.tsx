@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { QueryClient, QueryClientProvider } from "react-query";
 import App from "./App.tsx";
 import "./index.css";
 
@@ -19,18 +20,22 @@ const cacheRtl = createCache({
   stylisPlugins: [prefixer, rtlPlugin],
 });
 
+const client = new QueryClient();
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <CacheProvider value={cacheRtl}>
-      <ThemeProvider theme={theme}>
-        <DarkModeProvider>
-          <AuthProvider>
-            <div dir="rtl">
-              <App />
-            </div>
-          </AuthProvider>
-        </DarkModeProvider>
-      </ThemeProvider>
-    </CacheProvider>
+    <QueryClientProvider client={client}>
+      <CacheProvider value={cacheRtl}>
+        <ThemeProvider theme={theme}>
+          <DarkModeProvider>
+            <AuthProvider>
+              <div dir="rtl">
+                <App />
+              </div>
+            </AuthProvider>
+          </DarkModeProvider>
+        </ThemeProvider>
+      </CacheProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );

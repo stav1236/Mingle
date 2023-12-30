@@ -13,7 +13,6 @@ interface Post extends Document {
   _id: string;
   text?: string;
   imgSrc?: string;
-  creationTime: Date;
   creatorId: Types.ObjectId;
   comments: Comment[];
   likes: Like[];
