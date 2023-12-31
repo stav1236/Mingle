@@ -18,6 +18,8 @@ import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import CommentIcon from "@mui/icons-material/Comment";
 import SendIcon from "@mui/icons-material/Send";
 import { Like, Comment } from "@/models/Post";
+import { useQuery } from "react-query";
+import mingleAxios from "@/utilities/axios";
 
 interface PostProps {
   _id: string;
@@ -34,6 +36,26 @@ const Post = (props: PostProps) => {
   const { theme } = useDarkMode();
   const [likeDialogOpen, setLikeDialogOpen] = useState(false);
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
+
+  const { data: creator } = useQuery(
+    [
+      "users",
+      {
+        _id: props.creatorId,
+        params: {
+          projection: { _id: 1, firstName: 1, lastName: 1, gender: 1 },
+        },
+      },
+    ],
+    () =>
+      mingleAxios
+        .get(`/users/${props.creatorId}`, {
+          params: {
+            projection: { _id: 1, firstName: 1, lastName: 1, gender: 1 },
+          },
+        })
+        .then((res) => res.data)
+  );
 
   const handleLikeClick = () => {
     setLikeDialogOpen(true);
