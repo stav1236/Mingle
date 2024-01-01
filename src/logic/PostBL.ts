@@ -93,6 +93,29 @@ export const likePost = async (req: any, res: any) => {
   }
 };
 
+export const commentPost = async (req: any, res: any) => {
+  try {
+    const userId = req.userId;
+    const postId = req.body.postId;
+    const text = req.body.text;
+
+    const post = await Post.findById(postId);
+    if (post) {
+      const comments = [...post.comments];
+      comments.unshift({ userId, text });
+
+      post.comments = comments;
+      await post?.save();
+      return res.status(200).json(`Update post with id ${postId}`);
+    }
+
+    return res.status(500).json({ error: "Internal Server Error" });
+  } catch (error) {
+    logger.error("faild delete post", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 export const getFeedPosts = async (req: any, res: any) => {
   try {
     const creatorId = req.params.creatorId;

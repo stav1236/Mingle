@@ -24,6 +24,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import mingleAxios from "@/utilities/axios";
 import { useQueryClient } from "react-query";
 import LikesDialog from "./LikesDialog";
+import CommentsDialog from "./CommentsDialog";
 
 interface PostProps {
   _id: string;
@@ -40,6 +41,7 @@ const Post = (props: PostProps) => {
   const queryClient = useQueryClient();
   const { user: connectedUser } = useAuth();
 
+  const [text, setText] = useState("");
   const [likeDialogOpen, setLikeDialogOpen] = useState(false);
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -60,6 +62,25 @@ const Post = (props: PostProps) => {
       queryClient.invalidateQueries({
         queryKey: ["posts"],
       });
+  };
+
+  const handleAddComment = async () => {
+    if (text) {
+      const res = await mingleAxios.post("/posts/comment/", {
+        postId: props._id,
+        text,
+      });
+      if (res.status === 200) {
+        queryClient.invalidateQueries({
+          queryKey: ["posts"],
+        });
+        setText("");
+      }
+    }
+  };
+
+  const handleChangeText = (e: any) => {
+    setText(e.target.value);
   };
 
   const openLikeDialog = () => {
@@ -145,12 +166,14 @@ const Post = (props: PostProps) => {
       </Box>
       <Divider />
       <TextField
+        value={text}
+        onChange={handleChangeText}
         label="כתיבת תגובה"
         fullWidth
         variant="filled"
         InputProps={{
           endAdornment: (
-            <IconButton edge="end">
+            <IconButton onClick={handleAddComment} edge="end">
               <SendIcon />
             </IconButton>
           ),
@@ -162,20 +185,11 @@ const Post = (props: PostProps) => {
         open={likeDialogOpen}
         onClose={handleDialogClose}
       />
-      {/* <Dialog>
-        <DialogTitle>Like Dialog</DialogTitle>
-        <DialogContent>
-          <p>Dialog content for likes goes here.</p>
-        </DialogContent>
-      </Dialog> */}
-
-      <Dialog open={commentDialogOpen} onClose={handleDialogClose}>
-        <DialogTitle>Comment Dialog</DialogTitle>
-        <DialogContent>
-          {/* You can include a form for adding comments */}
-          <TextField label="Add a comment" fullWidth />
-        </DialogContent>
-      </Dialog>
+      <CommentsDialog
+        comments={props.comments}
+        open={commentDialogOpen}
+        onClose={handleDialogClose}
+      />
     </Card>
   );
 };

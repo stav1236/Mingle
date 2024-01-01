@@ -1,6 +1,7 @@
 import express from "express";
 import authMiddleware from "../middleware/authMiddleware";
 import {
+  commentPost,
   createPost,
   deletePostById,
   editPost,
@@ -21,11 +22,7 @@ postRouter.post("/", postUpload, createPost);
 
 postRouter.post("/like", likePost);
 
-postRouter.post("/comment/:postId", (req, res) => {
-  const postId = req.params.postId;
-  const postData = req.body;
-  res.send(`Update post with id ${postId}: ${JSON.stringify(postData)}`);
-});
+postRouter.post("/comment", commentPost);
 
 postRouter.put("/:postId/:newText", editPost);
 
