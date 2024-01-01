@@ -5,9 +5,14 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 import TopBarMenu from "./TopBarMenu";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "react-query";
 
 const TopBar = () => {
+  const queryClient = useQueryClient();
+
   const { logout } = useAuth();
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -16,6 +21,15 @@ const TopBar = () => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleTitleClick = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    navigate("/");
+    queryClient.invalidateQueries({ queryKey: ["posts", "media"] });
   };
 
   return (
@@ -30,9 +44,11 @@ const TopBar = () => {
         <IconButton size="large" onClick={handleMenuClick}>
           <MenuIcon />
         </IconButton>
-        <Typography variant="h4" fontWeight="bold">
-          Mingle
-        </Typography>
+        <span style={{ cursor: "pointer" }} onClick={handleTitleClick}>
+          <Typography variant="h4" fontWeight="bold">
+            Mingle
+          </Typography>
+        </span>
         <IconButton onClick={logout} size="large">
           <LogoutIcon />
         </IconButton>
