@@ -9,15 +9,12 @@ import {
   Box,
 } from "@mui/material";
 import { useDropzone, FileWithPath } from "react-dropzone";
-import { useDarkMode } from "@/contexts/DarkModeContext";
 import mingleAxios from "@/utilities/axios";
+import UserAvatar from "./UserAvatar";
+import { useAuth } from "@/contexts/AuthContext";
 
-interface AddPostCardProps {
-  //   avatarSrc: string; // URL or path to the avatar image
-}
-
-const AddPost: React.FC<AddPostCardProps> = () => {
-  const { theme } = useDarkMode();
+const AddPost = () => {
+  const { user } = useAuth();
 
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [postContent, setPostContent] = useState("");
@@ -65,16 +62,14 @@ const AddPost: React.FC<AddPostCardProps> = () => {
       console.error("Error submitting data:", error);
     }
 
-    // handleDialogClose();
+    handleDialogClose();
   };
 
   return (
     <>
       <Card sx={{ maxWidth: "90vw", width: 600, m: 1.5 }}>
         <Box p={1} display="flex" alignItems="center">
-          <Avatar sx={{ m: 1, bgcolor: `${theme.palette.primary.main}` }}>
-            סמ
-          </Avatar>
+          <UserAvatar {...user} sx={{ m: 1 }} />
           <TextField
             sx={{
               "& .MuiOutlinedInput-notchedOutline": {

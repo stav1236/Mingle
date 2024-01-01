@@ -14,7 +14,7 @@ interface TopBarMenuProps extends MenuProps {
 }
 
 const TopBarMenu = (props: TopBarMenuProps) => {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const { toggleDarkMode, isDarkMode } = useDarkMode();
   const navigate = useNavigate();
 
@@ -26,7 +26,7 @@ const TopBarMenu = (props: TopBarMenuProps) => {
   return (
     <Menu {...props}>
       <Box sx={{ width: 180 }}>
-        <MenuItem onClick={() => handleMenuItemClick("/profile/StavMaor")}>
+        <MenuItem onClick={() => handleMenuItemClick(`/profile/${user?._id}`)}>
           <PersonIcon sx={{ m: 0.7 }} />
           הפרופיל שלי
         </MenuItem>

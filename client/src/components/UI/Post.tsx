@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   Card,
   CardHeader,
-  Avatar,
   CardContent,
   Dialog,
   DialogTitle,
@@ -12,12 +11,15 @@ import {
   Box,
   Typography,
   IconButton,
+  Skeleton,
 } from "@mui/material";
-import { useDarkMode } from "@/contexts/DarkModeContext";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import CommentIcon from "@mui/icons-material/Comment";
 import SendIcon from "@mui/icons-material/Send";
 import { Like, Comment } from "@/models/Post";
+import UserAvatar from "./UserAvatar";
+import { imgSrcUrl } from "@/utilities/imageUtils";
+import useUserInfo from "@/hooks/useUserInfo";
 
 interface PostProps {
   _id: string;
@@ -30,8 +32,58 @@ interface PostProps {
   createdAt: string;
 }
 
+interface PostHeaderProps {
+  creatorId: string;
+  updatedAt: string;
+}
+
+const PostHeader = (props: PostHeaderProps) => {
+  const { data: creator, isLoading } = useUserInfo(props.creatorId);
+
+  const fullName = `${creator?.firstName} ${creator?.lastName}`;
+  const updatedAt = new Date(props.updatedAt);
+
+  return (
+    <CardHeader
+      sx={{ pb: 0 }}
+      avatar={
+        isLoading ? (
+          <Skeleton
+            animation="wave"
+            variant="circular"
+            width={40}
+            height={40}
+          />
+        ) : (
+          <UserAvatar {...creator} />
+        )
+      }
+      title={
+        isLoading ? (
+          <Skeleton
+            animation="wave"
+            height={10}
+            width="20%"
+            style={{ marginBottom: 10 }}
+          />
+        ) : (
+          fullName
+        )
+      }
+      subheader={updatedAt.toLocaleString("he", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        timeZone: "UTC",
+      })}
+    />
+  );
+};
+
 const Post = (props: PostProps) => {
-  const { theme } = useDarkMode();
   const [likeDialogOpen, setLikeDialogOpen] = useState(false);
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
 
@@ -50,20 +102,13 @@ const Post = (props: PostProps) => {
 
   return (
     <Card sx={{ maxWidth: "90vw", width: 600, m: 1.5 }}>
-      <CardHeader
-        sx={{ pb: 0 }}
-        avatar={
-          <Avatar sx={{ bgcolor: `${theme.palette.primary.main}` }}>סמ</Avatar>
-        }
-        title={props.creatorId}
-        subheader={props.createdAt}
-      />
+      <PostHeader {...props} />
       <CardContent sx={{ pt: 1, pb: 0.5 }}>
         <p>{props.text}</p>
       </CardContent>
       {props.imgSrc && (
         <img
-          src={`${import.meta.env.VITE_APP_UPLOADS_URL ?? ""}${props.imgSrc}`}
+          src={imgSrcUrl(props.imgSrc)}
           alt="Post"
           style={{ width: "100%" }}
         />
