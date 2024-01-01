@@ -12,6 +12,7 @@ import {
   Box,
   Typography,
   IconButton,
+  Skeleton,
 } from "@mui/material";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import CommentIcon from "@mui/icons-material/Comment";
@@ -20,6 +21,8 @@ import { Like, Comment } from "@/models/Post";
 import { useQuery } from "react-query";
 import mingleAxios from "@/utilities/axios";
 import { GENDERS } from "@/models/Gender";
+import UserAvatar from "./UserAvatar";
+import { imgSrcUrl } from "@/utilities/imageUtils";
 
 interface PostProps {
   _id: string;
@@ -38,7 +41,7 @@ interface PostHeaderProps {
 }
 
 const PostHeader = (props: PostHeaderProps) => {
-  const { data: creator } = useQuery(
+  const { data: creator, isLoading } = useQuery(
     [
       "users",
       {
@@ -65,17 +68,29 @@ const PostHeader = (props: PostHeaderProps) => {
     <CardHeader
       sx={{ pb: 0 }}
       avatar={
-        <Avatar
-          sx={{
-            bgcolor: `${
-              creator?.gender === GENDERS.FEMALE ? "#ff6961" : "#A7C7E7"
-            }`,
-          }}
-        >
-          {creator?.firstName.charAt(0) + "" + creator?.lastName.charAt(0)}
-        </Avatar>
+        isLoading ? (
+          <Skeleton
+            animation="wave"
+            variant="circular"
+            width={40}
+            height={40}
+          />
+        ) : (
+          <UserAvatar {...creator} />
+        )
       }
-      title={fullName}
+      title={
+        isLoading ? (
+          <Skeleton
+            animation="wave"
+            height={10}
+            width="20%"
+            style={{ marginBottom: 10 }}
+          />
+        ) : (
+          fullName
+        )
+      }
       subheader={updatedAt.toLocaleString("he", {
         year: "numeric",
         month: "long",
@@ -114,7 +129,7 @@ const Post = (props: PostProps) => {
       </CardContent>
       {props.imgSrc && (
         <img
-          src={`${import.meta.env.VITE_APP_UPLOADS_URL ?? ""}${props.imgSrc}`}
+          src={imgSrcUrl(props.imgSrc)}
           alt="Post"
           style={{ width: "100%" }}
         />
