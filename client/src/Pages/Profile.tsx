@@ -6,14 +6,18 @@ import { useParams } from "react-router-dom";
 import { Post as PostType } from "@/models/Post";
 
 const Profile = () => {
-  const { id } = useParams();
-  const { data: posts = [] } = useQuery<PostType[]>(["posts", "feed", id], () =>
-    mingleAxios(`/posts/feed/${id}`).then((res) => res.data.posts as PostType[])
+  const { userId } = useParams();
+  const { data: posts = [] } = useQuery<PostType[]>(
+    ["posts", "feed", { userId }],
+    () =>
+      mingleAxios(`/posts/feed/${userId}`).then(
+        (res) => res.data.posts as PostType[]
+      )
   );
 
   return (
     <>
-      <ProfileCard id={id} />;
+      <ProfileCard id={userId} />;
       {[...posts].map((post) => (
         <Post key={post._id} {...post} />
       ))}

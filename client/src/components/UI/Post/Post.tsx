@@ -74,6 +74,7 @@ const Post = (props: PostProps) => {
         </IconButton>
       )}
       <PostMoreOptions
+        {...props}
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleMoreOptionsClose}
