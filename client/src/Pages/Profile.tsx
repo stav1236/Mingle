@@ -1,4 +1,4 @@
-import Post from "@/components/UI/Post";
+import Post from "@/components/UI/Post/Post";
 import ProfileCard from "@/components/UI/ProfileCard";
 import mingleAxios from "@/utilities/axios";
 import { useQuery } from "react-query";

@@ -11,15 +11,16 @@ import {
   Box,
   Typography,
   IconButton,
-  Skeleton,
 } from "@mui/material";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import CommentIcon from "@mui/icons-material/Comment";
 import SendIcon from "@mui/icons-material/Send";
 import { Like, Comment } from "@/models/Post";
-import UserAvatar from "./UserAvatar";
 import { imgSrcUrl } from "@/utilities/imageUtils";
-import useUserInfo from "@/hooks/useUserInfo";
+import { useAuth } from "@/contexts/AuthContext";
+import PostHeader from "./PostHeader";
+import PostMoreOptions from "./PostMoreOptions";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 interface PostProps {
   _id: string;
@@ -32,60 +33,22 @@ interface PostProps {
   createdAt: string;
 }
 
-interface PostHeaderProps {
-  creatorId: string;
-  updatedAt: string;
-}
-
-const PostHeader = (props: PostHeaderProps) => {
-  const { data: creator, isLoading } = useUserInfo(props.creatorId);
-
-  const fullName = `${creator?.firstName} ${creator?.lastName}`;
-  const updatedAt = new Date(props.updatedAt);
-
-  return (
-    <CardHeader
-      sx={{ pb: 0 }}
-      avatar={
-        isLoading ? (
-          <Skeleton
-            animation="wave"
-            variant="circular"
-            width={40}
-            height={40}
-          />
-        ) : (
-          <UserAvatar {...creator} />
-        )
-      }
-      title={
-        isLoading ? (
-          <Skeleton
-            animation="wave"
-            height={10}
-            width="20%"
-            style={{ marginBottom: 10 }}
-          />
-        ) : (
-          fullName
-        )
-      }
-      subheader={updatedAt.toLocaleString("he", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        timeZone: "UTC",
-      })}
-    />
-  );
-};
-
 const Post = (props: PostProps) => {
+  const { user: connectedUser } = useAuth();
+
   const [likeDialogOpen, setLikeDialogOpen] = useState(false);
   const [commentDialogOpen, setCommentDialogOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleMoreOptionsClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMoreOptionsClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleLikeClick = () => {
     setLikeDialogOpen(true);
@@ -101,7 +64,21 @@ const Post = (props: PostProps) => {
   };
 
   return (
-    <Card sx={{ maxWidth: "90vw", width: 600, m: 1.5 }}>
+    <Card sx={{ maxWidth: "90vw", width: 600, m: 1.5, position: "relative" }}>
+      {connectedUser?._id === props.creatorId && (
+        <IconButton
+          sx={{ m: 1, position: "absolute", right: 0 }}
+          onClick={handleMoreOptionsClick}
+        >
+          <MoreHorizIcon />
+        </IconButton>
+      )}
+      <PostMoreOptions
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMoreOptionsClose}
+        handleMenuClose={handleMoreOptionsClose}
+      />
       <PostHeader {...props} />
       <CardContent sx={{ pt: 1, pb: 0.5 }}>
         <p>{props.text}</p>
