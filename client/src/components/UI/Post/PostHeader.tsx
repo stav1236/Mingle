@@ -4,14 +4,14 @@ import UserAvatar from "../UserAvatar";
 
 interface PostHeaderProps {
   creatorId: string;
-  updatedAt: string;
+  createdAt: string;
 }
 
 const PostHeader = (props: PostHeaderProps) => {
   const { data: creator, isLoading } = useUserInfo(props.creatorId);
 
   const fullName = `${creator?.firstName} ${creator?.lastName}`;
-  const updatedAt = new Date(props.updatedAt);
+  const createdAt = new Date(props.createdAt);
 
   return (
     <CardHeader
@@ -40,7 +40,7 @@ const PostHeader = (props: PostHeaderProps) => {
           fullName
         )
       }
-      subheader={updatedAt.toLocaleString("he", {
+      subheader={createdAt.toLocaleString("he", {
         year: "numeric",
         month: "long",
         day: "numeric",

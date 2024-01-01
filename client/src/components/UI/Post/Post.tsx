@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Card,
-  CardHeader,
   CardContent,
   Dialog,
   DialogTitle,
@@ -12,6 +11,7 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import CommentIcon from "@mui/icons-material/Comment";
 import SendIcon from "@mui/icons-material/Send";
@@ -21,6 +21,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import PostHeader from "./PostHeader";
 import PostMoreOptions from "./PostMoreOptions";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import mingleAxios from "@/utilities/axios";
+import { useQueryClient } from "react-query";
+import LikesDialog from "./LikesDialog";
 
 interface PostProps {
   _id: string;
@@ -34,6 +37,7 @@ interface PostProps {
 }
 
 const Post = (props: PostProps) => {
+  const queryClient = useQueryClient();
   const { user: connectedUser } = useAuth();
 
   const [likeDialogOpen, setLikeDialogOpen] = useState(false);
@@ -50,7 +54,15 @@ const Post = (props: PostProps) => {
     setAnchorEl(null);
   };
 
-  const handleLikeClick = () => {
+  const handleLikeClick = async () => {
+    const res = await mingleAxios.post("/posts/like/", { postId: props._id });
+    if (res.status === 200)
+      queryClient.invalidateQueries({
+        queryKey: ["posts"],
+      });
+  };
+
+  const openLikeDialog = () => {
     setLikeDialogOpen(true);
   };
 
@@ -62,6 +74,11 @@ const Post = (props: PostProps) => {
     setLikeDialogOpen(false);
     setCommentDialogOpen(false);
   };
+
+  const isLike = useMemo(
+    () => props.likes.some((like) => like.userId === connectedUser?._id),
+    [props.likes]
+  );
 
   return (
     <Card sx={{ maxWidth: "90vw", width: 600, m: 1.5, position: "relative" }}>
@@ -99,11 +116,13 @@ const Post = (props: PostProps) => {
             alignItems: "center",
           }}
         >
-          <ThumbUpOutlinedIcon />
+          <span onClick={handleLikeClick} style={{ cursor: "pointer" }}>
+            {isLike ? <ThumbUpAltIcon /> : <ThumbUpOutlinedIcon />}
+          </span>
           <Typography
-            sx={{ ml: 1 }}
+            sx={{ ml: 1, cursor: "pointer" }}
             variant="subtitle1"
-            onClick={handleLikeClick}
+            onClick={openLikeDialog}
           >
             {props.likes.length} לייקים
           </Typography>
@@ -116,7 +135,7 @@ const Post = (props: PostProps) => {
         >
           <CommentIcon />
           <Typography
-            sx={{ ml: 1 }}
+            sx={{ ml: 1, cursor: "pointer" }}
             variant="subtitle1"
             onClick={handleCommentClick}
           >
@@ -137,12 +156,18 @@ const Post = (props: PostProps) => {
           ),
         }}
       />
-      <Dialog open={likeDialogOpen} onClose={handleDialogClose}>
+
+      <LikesDialog
+        likes={props.likes}
+        open={likeDialogOpen}
+        onClose={handleDialogClose}
+      />
+      {/* <Dialog>
         <DialogTitle>Like Dialog</DialogTitle>
         <DialogContent>
           <p>Dialog content for likes goes here.</p>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
 
       <Dialog open={commentDialogOpen} onClose={handleDialogClose}>
         <DialogTitle>Comment Dialog</DialogTitle>
