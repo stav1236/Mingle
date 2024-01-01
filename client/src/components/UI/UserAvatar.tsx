@@ -24,7 +24,12 @@ const UserAvatar = ({
     <span
       style={{ cursor: "pointer" }}
       onClick={() => {
-        _id && navigate(`/profile/${_id}`);
+        if (_id) {
+          navigate(`/profile/${_id}`);
+          window.scrollTo({
+            top: 0,
+          });
+        }
       }}
     >
       <Avatar
