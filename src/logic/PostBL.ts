@@ -29,6 +29,40 @@ export const createPost = async (req: any, res: any) => {
   }
 };
 
+export const deletePostById = async (req: any, res: any) => {
+  try {
+    const postId = req.params.postId;
+    const post = await Post.findById(postId);
+    if (post && post.creatorId._id.toString() === req.userId) {
+      await post?.deleteOne();
+      return res.status(200).json(`Deleted post with id ${postId}`);
+    }
+
+    return res.status(500).json({ error: "Internal Server Error" });
+  } catch (error) {
+    logger.error("faild delete post", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const editPost = async (req: any, res: any) => {
+  try {
+    const postId = req.params?.postId;
+    const newText = req.params?.newText;
+
+    const post = await Post.findById(postId);
+    if (post && post.creatorId._id.toString() === req.userId) {
+      post.text = newText;
+      await post?.save();
+      return res.status(200).json(`Update post with id ${postId}`);
+    }
+
+    return res.status(500).json({ error: "Internal Server Error" });
+  } catch (error) {
+    logger.error("faild delete post", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 export const getFeedPosts = async (req: any, res: any) => {
   try {
     const creatorId = req.params.creatorId;
@@ -49,22 +83,6 @@ export const getMeadiaPosts = async (req: any, res: any) => {
     return res.status(200).json({ posts });
   } catch (error) {
     logger.error("Error getting posts", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
-export const deletePostById = async (req: any, res: any) => {
-  try {
-    const postId = req.params.postId;
-    const post = await Post.findById(postId);
-    if (post && post.creatorId._id.toString() === req.userId) {
-      await post?.deleteOne();
-      return res.status(200).json(`success delete post ${postId}`);
-    }
-
-    return res.status(500).json({ error: "Internal Server Error" });
-  } catch (error) {
-    logger.error("faild delete post", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

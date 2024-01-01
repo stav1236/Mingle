@@ -3,6 +3,7 @@ import authMiddleware from "../middleware/authMiddleware";
 import {
   createPost,
   deletePostById,
+  editPost,
   getFeedPosts,
   getMeadiaPosts,
 } from "../logic/PostBL";
@@ -41,11 +42,7 @@ postRouter.put("/comment/:postId", (req, res) => {
   res.send(`Update post with id ${postId}: ${JSON.stringify(postData)}`);
 });
 
-postRouter.put("/:postId", (req, res) => {
-  const postId = req.params.postId;
-  const postData = req.body;
-  res.send(`Update post with id ${postId}: ${JSON.stringify(postData)}`);
-});
+postRouter.put("/:postId/:newText", editPost);
 
 postRouter.delete("/:postId", deletePostById);
 
