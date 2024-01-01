@@ -1,11 +1,14 @@
-import { useDarkMode } from "@/contexts/DarkModeContext";
-import { Avatar, Card, Typography } from "@mui/material";
+import { Card, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useNavigate } from "react-router-dom";
-const ProfileCard = () => {
-  const navigate = useNavigate();
-  const { theme } = useDarkMode();
+import useUserInfo from "@/hooks/useUserInfo";
+import UserAvatar from "./UserAvatar";
+import { useAuth } from "@/contexts/AuthContext";
 
+const ProfileCard = ({ id }: { id?: string }) => {
+  const navigate = useNavigate();
+  const { data: user } = useUserInfo(id);
+  const { user: loggedinUser } = useAuth();
   return (
     <Card
       sx={{
@@ -21,23 +24,24 @@ const ProfileCard = () => {
         m: 1.5,
       }}
     >
-      <span
-        onClick={() => navigate("/settings")}
-        style={{ cursor: "pointer", position: "absolute", top: 10, left: 15 }}
-      >
-        <EditIcon />
-      </span>
-      <Avatar
+      {loggedinUser?._id === id && (
+        <span
+          onClick={() => navigate("/settings")}
+          style={{ cursor: "pointer", position: "absolute", top: 10, left: 15 }}
+        >
+          <EditIcon />
+        </span>
+      )}
+      <UserAvatar
         sx={{
-          bgcolor: `${theme.palette.primary.main}`,
           width: 120,
           height: 120,
+          fontSize: 60,
         }}
-      >
-        SM
-      </Avatar>
+        {...user}
+      />
       <Typography fontWeight="bold" variant="h5">
-        Stav Maor
+        {user ? `${user?.firstName} ${user?.lastName}` : ""}
       </Typography>
     </Card>
   );
