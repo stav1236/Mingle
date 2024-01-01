@@ -52,3 +52,19 @@ export const getMeadiaPosts = async (req: any, res: any) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+export const deletePostById = async (req: any, res: any) => {
+  try {
+    const postId = req.params.postId;
+    const post = await Post.findById(postId);
+    if (post && post.creatorId._id.toString() === req.userId) {
+      await post?.deleteOne();
+      return res.status(200).json(`success delete post ${postId}`);
+    }
+
+    return res.status(500).json({ error: "Internal Server Error" });
+  } catch (error) {
+    logger.error("faild delete post", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};

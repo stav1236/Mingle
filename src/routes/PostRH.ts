@@ -1,6 +1,11 @@
 import express from "express";
 import authMiddleware from "../middleware/authMiddleware";
-import { createPost, getFeedPosts, getMeadiaPosts } from "../logic/PostBL";
+import {
+  createPost,
+  deletePostById,
+  getFeedPosts,
+  getMeadiaPosts,
+} from "../logic/PostBL";
 import { postUpload } from "../middleware/uploadMiddleware";
 
 const postRouter = express.Router();
@@ -24,15 +29,24 @@ postRouter.get("/:postId/comments", (req, res) => {
 
 postRouter.post("/", postUpload, createPost);
 
+postRouter.put("/like/:postId", (req, res) => {
+  const postId = req.params.postId;
+  const postData = req.body;
+  res.send(`Update post with id ${postId}: ${JSON.stringify(postData)}`);
+});
+
+postRouter.put("/comment/:postId", (req, res) => {
+  const postId = req.params.postId;
+  const postData = req.body;
+  res.send(`Update post with id ${postId}: ${JSON.stringify(postData)}`);
+});
+
 postRouter.put("/:postId", (req, res) => {
   const postId = req.params.postId;
   const postData = req.body;
   res.send(`Update post with id ${postId}: ${JSON.stringify(postData)}`);
 });
 
-postRouter.delete("/:postId", (req, res) => {
-  const postId = req.params.postId;
-  res.send(`Delete post with id ${postId}`);
-});
+postRouter.delete("/:postId", deletePostById);
 
 export default postRouter;
