@@ -13,13 +13,13 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
-import { useDarkMode } from "@/contexts/DarkModeContext";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import CommentIcon from "@mui/icons-material/Comment";
 import SendIcon from "@mui/icons-material/Send";
 import { Like, Comment } from "@/models/Post";
 import { useQuery } from "react-query";
 import mingleAxios from "@/utilities/axios";
+import { GENDERS } from "@/models/Gender";
 
 interface PostProps {
   _id: string;
@@ -32,11 +32,12 @@ interface PostProps {
   createdAt: string;
 }
 
-const Post = (props: PostProps) => {
-  const { theme } = useDarkMode();
-  const [likeDialogOpen, setLikeDialogOpen] = useState(false);
-  const [commentDialogOpen, setCommentDialogOpen] = useState(false);
+interface PostHeaderProps {
+  creatorId: string;
+  updatedAt: string;
+}
 
+const PostHeader = (props: PostHeaderProps) => {
   const { data: creator } = useQuery(
     [
       "users",
@@ -57,6 +58,41 @@ const Post = (props: PostProps) => {
         .then((res) => res.data)
   );
 
+  const fullName = `${creator?.firstName} ${creator?.lastName}`;
+  const updatedAt = new Date(props.updatedAt);
+
+  return (
+    <CardHeader
+      sx={{ pb: 0 }}
+      avatar={
+        <Avatar
+          sx={{
+            bgcolor: `${
+              creator?.gender === GENDERS.FEMALE ? "#ff6961" : "#A7C7E7"
+            }`,
+          }}
+        >
+          {creator?.firstName.charAt(0) + "" + creator?.lastName.charAt(0)}
+        </Avatar>
+      }
+      title={fullName}
+      subheader={updatedAt.toLocaleString("he", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        timeZone: "UTC",
+      })}
+    />
+  );
+};
+
+const Post = (props: PostProps) => {
+  const [likeDialogOpen, setLikeDialogOpen] = useState(false);
+  const [commentDialogOpen, setCommentDialogOpen] = useState(false);
+
   const handleLikeClick = () => {
     setLikeDialogOpen(true);
   };
@@ -72,14 +108,7 @@ const Post = (props: PostProps) => {
 
   return (
     <Card sx={{ maxWidth: "90vw", width: 600, m: 1.5 }}>
-      <CardHeader
-        sx={{ pb: 0 }}
-        avatar={
-          <Avatar sx={{ bgcolor: `${theme.palette.primary.main}` }}>סמ</Avatar>
-        }
-        title={props.creatorId}
-        subheader={props.createdAt}
-      />
+      <PostHeader {...props} />
       <CardContent sx={{ pt: 1, pb: 0.5 }}>
         <p>{props.text}</p>
       </CardContent>
