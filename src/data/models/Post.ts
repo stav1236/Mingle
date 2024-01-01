@@ -42,7 +42,7 @@ const postSchema = new Schema<Post>(
   }
 );
 
-postSchema.index({ updatedAt: -1, creatorId: 1 });
+postSchema.index({ createdAt: -1, creatorId: 1 });
 
 const Post = mongoose.model<Post>("Post", postSchema);
 

@@ -33,7 +33,7 @@ const App = () => {
         <Box sx={isLogin ? mediaScreenSx : {}}>
           <Routes>
             <Route
-              path="/Profile/:id"
+              path="/Profile/:userId"
               element={isLogin ? <Profile /> : <Navigate to="/" />}
             />
             <Route

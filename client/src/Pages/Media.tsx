@@ -1,4 +1,4 @@
-import Post from "components/UI/Post";
+import Post from "@/components/UI/Post/Post";
 import AddPost from "components/UI/AddPost";
 import { useQuery } from "react-query";
 import mingleAxios from "@/utilities/axios";
