@@ -10,13 +10,15 @@ const UserAvatar = ({
   lastName,
   imgSrc,
   sx,
+  onClick,
 }: {
-  _id: string;
+  _id?: string;
   gender?: string;
   firstName?: string;
   lastName?: string;
   imgSrc?: string;
   sx?: SxProps;
+  onClick?: () => void;
 }) => {
   const navigate = useNavigate();
 
@@ -24,11 +26,15 @@ const UserAvatar = ({
     <span
       style={{ cursor: "pointer" }}
       onClick={() => {
-        if (_id) {
-          navigate(`/profile/${_id}`);
-          window.scrollTo({
-            top: 0,
-          });
+        if (onClick) {
+          onClick();
+        } else {
+          if (_id) {
+            navigate(`/profile/${_id}`);
+            window.scrollTo({
+              top: 0,
+            });
+          }
         }
       }}
     >

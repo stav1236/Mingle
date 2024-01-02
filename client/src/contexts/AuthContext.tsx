@@ -21,6 +21,7 @@ interface AuthContextProps {
   login: (email: string, password: string) => void;
   logout: () => void;
   clearAuth: () => void;
+  updateUser: (newUser: User) => void;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -91,8 +92,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem("_id");
   };
 
+  const updateUser = (newUser: User) => {
+    setUser(newUser);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isLogin, login, logout, clearAuth }}>
+    <AuthContext.Provider
+      value={{ user, isLogin, login, logout, clearAuth, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

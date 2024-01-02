@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import UserAvatar from "../UserAvatar";
+import { getFullName } from "@/utilities/userUtils";
 
 interface CommentsDialogProps extends DialogProps {
   comments: Comment[];
@@ -25,7 +26,7 @@ const CommentRow = ({
 }) => {
   const { data: user } = useUserInfo(comment.userId);
 
-  const fullName = `${user?.firstName} ${user?.lastName}`;
+  const fullName = getFullName(user?.firstName, user?.lastName);
 
   return (
     <Box width={"100%"}>

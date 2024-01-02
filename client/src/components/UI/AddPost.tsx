@@ -1,6 +1,5 @@
 import React, { useState, ChangeEvent, useCallback } from "react";
 import {
-  Avatar,
   Card,
   Dialog,
   DialogTitle,
@@ -112,11 +111,10 @@ const AddPost = () => {
           </div>
           {uploadedImage && (
             <div>
-              <p>Uploaded Image:</p>
               <img
                 src={URL.createObjectURL(uploadedImage)}
                 alt="Uploaded"
-                style={{ maxWidth: "100%" }}
+                style={{ width: 200, height: 200 }}
               />
             </div>
           )}
