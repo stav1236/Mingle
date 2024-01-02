@@ -25,4 +25,4 @@ const createMulterMiddleware = (type: string) => {
 };
 
 export const postUpload = createMulterMiddleware("posts");
-export const profileUpload = createMulterMiddleware("avatars");
+export const avatarUpload = createMulterMiddleware("avatars");

@@ -1,10 +1,11 @@
 import express from "express";
 import authMiddleware from "../middleware/authMiddleware";
-import { getUserById } from "../logic/UserBL";
+import { getUserById, updateAvatar, updateUserDetails } from "../logic/UserBL";
 import logger from "../common/config/logger";
 import { numericProjection } from "../common/utilities/mongoUtils";
 import { ProjectionType } from "mongoose";
 import User from "../data/models/User";
+import { avatarUpload } from "../middleware/uploadMiddleware";
 
 const userRouter = express.Router();
 userRouter.use(authMiddleware);
@@ -28,15 +29,7 @@ userRouter.get("/:userId", async (req, res) => {
   }
 });
 
-userRouter.put("/:userId", (req, res) => {
-  const userId = req.params.userId;
-  const userData = req.body;
-  res.send(`Update user with id ${userId}: ${JSON.stringify(userData)}`);
-});
-
-userRouter.delete("/:userId", (req, res) => {
-  const userId = req.params.userId;
-  res.send(`Delete user with id ${userId}`);
-});
+userRouter.put("/:field/:value", updateUserDetails);
+userRouter.post("/avatar", avatarUpload, updateAvatar);
 
 export default userRouter;
