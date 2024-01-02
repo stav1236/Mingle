@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import UserAvatar from "../UserAvatar";
+import { getFullName } from "@/utilities/userUtils";
 
 interface LikesDialogProps extends DialogProps {
   likes: Like[];
@@ -18,7 +19,7 @@ interface LikesDialogProps extends DialogProps {
 const LikeRow = ({ userId }: { userId: string }) => {
   const { data: user } = useUserInfo(userId);
 
-  const fullName = `${user?.firstName} ${user?.lastName}`;
+  const fullName = getFullName(user?.firstName, user?.lastName);
 
   return (
     <Box sx={{ mb: 2.5 }} display="flex" alignItems={"center"}>

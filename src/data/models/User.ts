@@ -10,6 +10,7 @@ interface User extends Document {
   birthDate: Date;
   gender: Gender;
   tokens?: String[];
+  imgSrc?: string;
 }
 
 const userSchema = new Schema<User>({
@@ -20,6 +21,7 @@ const userSchema = new Schema<User>({
   birthDate: { type: Date, required: true },
   gender: { type: String, enum: [...Object.values(GENDERS)], required: true },
   tokens: { type: [String] },
+  imgSrc: { type: String },
 });
 
 userSchema.methods.toJSON = function () {

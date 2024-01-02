@@ -107,7 +107,7 @@ const RegisterDialog = (props: RegisterDialogProps) => {
                 height: 15,
               },
             }}
-            label="אמייל / טלפון"
+            label="אמייל"
             fullWidth
             value={email}
             onChange={(e) => setEmail(e.target.value)}

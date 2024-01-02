@@ -1,11 +1,22 @@
 import React from "react";
-import { Typography, Avatar, Card, Box } from "@mui/material";
+import { Typography, Card, Box } from "@mui/material";
 import EditField from "@/components/UI/EditField";
+import mingleAxios from "@/utilities/axios";
+import { useAuth } from "@/contexts/AuthContext";
+import User from "@/models/User";
+import UserAvatar from "@/components/UI/UserAvatar";
+import { GENDERS } from "@/models/Gender";
 
 const ProfileSettings: React.FC = () => {
-  const handleSave = (field: string, value: string) => {
-    // Implement logic to save the edited value (e.g., make an API call)
-    console.log(`Saving ${field}: ${value}`);
+  const { user, updateUser } = useAuth();
+
+  const handleSave = async (field: string, value: string) => {
+    if (value) {
+      const res = await mingleAxios.put(`/users/${field}/${value}`);
+      if (res.status === 200 && field !== "password") {
+        updateUser(res.data as User);
+      }
+    }
   };
 
   return (
@@ -22,40 +33,39 @@ const ProfileSettings: React.FC = () => {
         <Typography gutterBottom variant="h4">
           הגדרות פרופיל
         </Typography>
-        <Avatar
-          alt="Profile Picture"
-          src="/path/to/your/profile/image.jpg"
-          sx={{ width: 100, height: 100 }}
-        />
+        <UserAvatar {...user} sx={{ width: 100, height: 100, fontSize: 40 }} />
       </Box>
       <EditField
-        label="First Name"
-        value="John"
+        label="שם פרטי"
+        value={user?.firstName ?? ""}
         onSave={(value) => handleSave("firstName", value)}
       />
       <EditField
-        label="Last Name"
-        value="Doe"
+        label="שם משפחה"
+        value={user?.lastName ?? ""}
         onSave={(value) => handleSave("lastName", value)}
       />
       <EditField
-        label="Email/Phone"
-        value="john.doe@example.com"
-        onSave={(value) => handleSave("emailPhone", value)}
+        label="אמייל"
+        value={user?.email ?? ""}
+        onSave={(value) => handleSave("email", value)}
       />
       <EditField
-        label="Password"
+        isPassword
+        label="סיסמא"
         value="********"
         onSave={(value) => handleSave("password", value)}
       />
       <EditField
-        label="Birth Date"
-        value="01/01/1990"
+        isDate
+        label="תאריך לידה"
+        value={user?.birthDate?.toLocaleString() ?? ""}
         onSave={(value) => handleSave("birthDate", value)}
       />
       <EditField
-        label="Gender"
-        value="Male"
+        value={user?.gender}
+        options={Object.values(GENDERS)}
+        label="מגדר"
         onSave={(value) => handleSave("gender", value)}
       />
     </Card>

@@ -11,7 +11,7 @@ const UserAvatar = ({
   imgSrc,
   sx,
 }: {
-  _id: string;
+  _id?: string;
   gender?: string;
   firstName?: string;
   lastName?: string;

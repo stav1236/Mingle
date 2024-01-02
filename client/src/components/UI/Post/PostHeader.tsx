@@ -1,6 +1,8 @@
 import useUserInfo from "@/hooks/useUserInfo";
 import { CardHeader, Skeleton } from "@mui/material";
 import UserAvatar from "../UserAvatar";
+import { getFullName } from "@/utilities/userUtils";
+import { getHebrewDate } from "@/utilities/dateUtils";
 
 interface PostHeaderProps {
   creatorId: string;
@@ -10,8 +12,7 @@ interface PostHeaderProps {
 const PostHeader = (props: PostHeaderProps) => {
   const { data: creator, isLoading } = useUserInfo(props.creatorId);
 
-  const fullName = `${creator?.firstName} ${creator?.lastName}`;
-  const createdAt = new Date(props.createdAt);
+  const fullName = getFullName(creator?.firstName, creator?.lastName);
 
   return (
     <CardHeader
@@ -40,15 +41,7 @@ const PostHeader = (props: PostHeaderProps) => {
           fullName
         )
       }
-      subheader={createdAt.toLocaleString("he", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        timeZone: "UTC",
-      })}
+      subheader={getHebrewDate(props.createdAt)}
     />
   );
 };
