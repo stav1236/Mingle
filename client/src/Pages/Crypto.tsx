@@ -19,6 +19,7 @@ import {
 import { CURRENCY, Currency } from "@/models/Currency";
 import { useQuery } from "react-query";
 import mingleAxios from "@/utilities/axios";
+import { getHebrewDate } from "@/utilities/dateUtils";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -42,6 +43,13 @@ const Crypto = () => {
         console.log(res.data);
         return res.data as any[];
       })
+  );
+
+  const { data: mingleCoin } = useQuery<any>(["crypto", "mingle"], () =>
+    mingleAxios(`/crypto/mingle`).then((res) => {
+      console.log(res.data);
+      return res.data as any[];
+    })
   );
 
   return (
@@ -136,9 +144,29 @@ const Crypto = () => {
             </Table>
           </TableContainer>
 
-          <Divider sx={{ mt: 2 }} orientation="horizontal" flexItem>
+          <Divider sx={{ m: 2 }} orientation="horizontal" flexItem>
             המטבע שלנו
           </Divider>
+
+          <Box
+            display={"flex"}
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            border={1}
+            borderColor="primary.main"
+            borderRadius={3}
+            p={2}
+            width={300}
+          >
+            <Typography variant="h6">
+              {mingleCoin?.name} ({mingleCoin?.symbol})
+            </Typography>
+            <Typography variant="body1">{`מחיר ${mingleCoin?.price} ש"ח`}</Typography>
+            <Typography variant="body2">
+              עדכון אחרון: {mingleCoin?.date}
+            </Typography>
+          </Box>
         </Box>
       </Card>
     </>

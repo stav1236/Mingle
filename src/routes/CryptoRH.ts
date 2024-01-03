@@ -26,7 +26,23 @@ cryptoRouter.get("/:amount/:curreny", async (req, res) => {
         },
       }
     );
-    res.json(getRelevetDataForUser(response.data.data, convert));
+    res.status(200).json(getRelevetDataForUser(response.data.data, convert));
+  } catch (error: any) {
+    logger.error("Error fetching data: ", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+cryptoRouter.get("/mingle", async (req, res) => {
+  try {
+    const name = "Mingle";
+    const symbol = "MNG";
+    const currDate = new Date();
+    const date = currDate.toLocaleString("he", {
+      timeZone: "Asia/Jerusalem",
+    });
+    const price = (1.5 + Math.random() * (1.98 - 1.5)).toFixed(6);
+    res.status(200).json({ date, price, name, symbol });
   } catch (error: any) {
     logger.error("Error fetching data: ", error.message);
     res.status(500).json({ error: "Internal Server Error" });
