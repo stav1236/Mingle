@@ -1,29 +1,32 @@
-import express from "express";
-import { getUserById, updateAvatar, updateUserDetails } from "../logic/UserBL";
-import logger from "../common/config/logger";
-import { numericProjection } from "../common/utilities/mongoUtils";
-import { ProjectionType } from "mongoose";
-import User from "../data/models/User";
 import axios from "axios";
+import express from "express";
+
+import logger from "../common/config/logger";
+import { getRelevetDataForUser } from "../logic/CryptoBl";
+import authMiddleware from "../middleware/authMiddleware";
 
 const cryptoRouter = express.Router();
+cryptoRouter.use(authMiddleware);
 
-cryptoRouter.get("/", async (req, res) => {
+cryptoRouter.get("/:amount/:curreny", async (req, res) => {
   try {
+    const limit = req.params.amount;
+    const convert = req.params.curreny;
+
     const response = await axios.get(
       "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest",
       {
         params: {
           start: 1,
-          limit: 10,
-          convert: "ILS",
+          limit,
+          convert,
         },
         headers: {
           "X-CMC_PRO_API_KEY": process.env.COIN_MARKET_CAP_API_TOKEN,
         },
       }
     );
-    res.json(response.data);
+    res.json(getRelevetDataForUser(response.data.data, convert));
   } catch (error: any) {
     logger.error("Error fetching data: ", error.message);
     res.status(500).json({ error: "Internal Server Error" });

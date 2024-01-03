@@ -4,6 +4,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
+import CurrencyBitcoinIcon from "@mui/icons-material/CurrencyBitcoin";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 import { useDarkMode } from "contexts/DarkModeContext";
@@ -37,6 +38,10 @@ const TopBarMenu = (props: TopBarMenuProps) => {
         <MenuItem onClick={() => handleMenuItemClick("/settings")}>
           <SettingsOutlinedIcon sx={{ m: 0.7 }} />
           הגדרות
+        </MenuItem>
+        <MenuItem onClick={() => handleMenuItemClick("/crypto")}>
+          <CurrencyBitcoinIcon sx={{ m: 0.7 }} />
+          {"קריפטו [חדש]"}
         </MenuItem>
         <MenuItem onClick={toggleDarkMode}>
           {isDarkMode ? (
