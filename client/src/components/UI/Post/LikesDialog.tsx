@@ -47,8 +47,8 @@ const LikesDialog = (props: LikesDialogProps) => {
       >
         <DialogTitle>לייקים</DialogTitle>
         <DialogContent sx={{ width: "98%" }}>
-          {props.likes.map((like) => (
-            <LikeRow {...like} />
+          {props.likes.map((like, index) => (
+            <LikeRow key={like.userId + "" + index} {...like} />
           ))}
         </DialogContent>
       </Box>

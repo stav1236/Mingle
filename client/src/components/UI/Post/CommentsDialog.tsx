@@ -48,6 +48,7 @@ const CommentsDialog = (props: CommentsDialogProps) => {
         <DialogContent>
           {props.comments.map((comment, index) => (
             <CommentRow
+              key={comment.userId + "" + index}
               comment={comment}
               isLast={index === props.comments.length - 1}
             />

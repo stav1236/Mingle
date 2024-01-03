@@ -8,6 +8,7 @@ import userRouter from "./routes/UserRH";
 import authRouter from "./routes/AuthRH";
 import logger from "./common/config/logger";
 import connectToDatabase from "./data/base";
+import cryptoRouter from "./routes/CryptoRH";
 
 dotenv.config();
 process.on("uncaughtException", (err) => {
@@ -31,6 +32,15 @@ app.use("/uploads", express.static("uploads"));
 app.use(express.static("client/dist"));
 
 app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
+app.use((req, res, next) => {
   if (req.path.startsWith("/api")) {
     logger.info(`Received ${req.method} request at ${req.path}`);
   }
@@ -40,6 +50,7 @@ app.use((req, res, next) => {
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
+app.use("/api/crypto", cryptoRouter);
 
 app.get("*", (req, res) => {
   if (!req.path.startsWith("/api")) {

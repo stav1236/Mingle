@@ -15,6 +15,7 @@ import Media from "./Pages/Media";
 import TopBar from "./components/TopBar/TopBar";
 import { Box, SxProps } from "@mui/material";
 import { useAuth } from "./contexts/AuthContext";
+import Crypto from "./Pages/Crypto";
 
 const mediaScreenSx: SxProps = {
   display: "flex",
@@ -39,6 +40,10 @@ const App = () => {
             <Route
               path="/Settings"
               element={isLogin ? <Settings /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/Crypto"
+              element={isLogin ? <Crypto /> : <Navigate to="/" />}
             />
             <Route path="/home" element={isLogin ? <Media /> : <Auth />} />
             <Route path="/" element={isLogin ? <Media /> : <Auth />} />

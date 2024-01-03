@@ -6,5 +6,6 @@ declare namespace NodeJS {
     ACCESS_TOKEN_SECRET: string;
     REFRESH_TOKEN_SECRET: string;
     JWT_TOKEN_EXPIRATION: string;
+    COIN_MARKET_CAP_API_TOKEN: string;
   }
 }
