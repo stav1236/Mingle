@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { Card, TextField, Button } from "@mui/material";
+import { Card, TextField, Button, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import GoogleAuthButton from "../../GoogleAuthButton";
 
 interface LoginFormProps {
   openRegisterDialog: () => void;
@@ -26,8 +27,8 @@ const LoginForm = (props: LoginFormProps) => {
         minWidth: "22%",
         width: 380,
         maxWidth: "93vw",
-        minHeight: "20%",
-        height: 290,
+        minHeight: "22%",
+        height: 330,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-around",
@@ -74,6 +75,7 @@ const LoginForm = (props: LoginFormProps) => {
       >
         יצירת משתמש חדש
       </Button>
+      <GoogleAuthButton />
     </Card>
   );
 };

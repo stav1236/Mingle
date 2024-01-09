@@ -22,6 +22,7 @@ interface AuthContextProps {
   logout: () => void;
   clearAuth: () => void;
   updateUser: (newUser: User) => void;
+  onSuccessLogin: (response) => void;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -56,14 +57,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     getUserById();
   }, [isLogin]);
 
+  const onSuccessLogin = (response) => {
+    saveAccessToken(response.data.accessToken);
+    saveRefreshToken(response.data.refreshToken);
+    localStorage.setItem("_id", response.data._id);
+    setIsLogin(true);
+  };
+
   const login = (email: string, password: string) => {
     nonTokenAxios
       .post("/auth/login/", { email, password })
       .then((response: any) => {
-        saveAccessToken(response.data.accessToken);
-        saveRefreshToken(response.data.refreshToken);
-        localStorage.setItem("_id", response.data._id);
-        setIsLogin(true);
+        onSuccessLogin(response);
       })
       .catch((error: any) => {
         clearAuth();
@@ -98,7 +103,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, isLogin, login, logout, clearAuth, updateUser }}
+      value={{
+        user,
+        isLogin,
+        login,
+        logout,
+        clearAuth,
+        updateUser,
+        onSuccessLogin,
+      }}
     >
       {children}
     </AuthContext.Provider>
