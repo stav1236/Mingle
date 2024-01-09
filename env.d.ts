@@ -7,5 +7,6 @@ declare namespace NodeJS {
     REFRESH_TOKEN_SECRET: string;
     JWT_TOKEN_EXPIRATION: string;
     COIN_MARKET_CAP_API_TOKEN: string;
+    GOOGLE_CLIENT_ID: string;
   }
 }

@@ -1,8 +1,15 @@
 import express from "express";
-import { login, logout, refreshToken, register } from "../logic/AuthBL";
+import {
+  handleGoogleAuth,
+  login,
+  logout,
+  refreshToken,
+  register,
+} from "../logic/AuthBL";
 
 const authRouter = express.Router();
 
+authRouter.post("/google", handleGoogleAuth);
 authRouter.post("/login", login);
 authRouter.post("/logout", logout);
 authRouter.post("/register", register);
