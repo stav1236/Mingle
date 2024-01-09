@@ -147,3 +147,37 @@ export const refreshToken = async (req: any, res: any) => {
     }
   );
 };
+
+export const handleGoogleAuth = async (req: any, res: any) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const accessToken = jwt.sign(
+      { _id: user._id },
+      process.env.ACCESS_TOKEN_SECRET as Secret,
+      { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
+    );
+    const refreshToken = jwt.sign(
+      { _id: user._id },
+      process.env.REFRESH_TOKEN_SECRET as Secret
+    );
+
+    if (!user.tokens) user.tokens = [refreshToken];
+    else user.tokens.push(refreshToken);
+    await user.save();
+
+    res.json({ accessToken, refreshToken, _id: user._id });
+  } catch (error) {
+    logger.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};

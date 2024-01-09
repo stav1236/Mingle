@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { Card, TextField, Button, Box } from "@mui/material";
+import { Card, TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import GoogleAuthButton from "../../GoogleAuthButton";
 

@@ -5,7 +5,6 @@ import { GoogleLogin } from "react-google-login";
 import { Button } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import { nonTokenAxios } from "@/utilities/axios";
-import { saveAccessToken, saveRefreshToken } from "@/utilities/tokenService";
 import { useAuth } from "@/contexts/AuthContext";
 
 const birthDayScope = "https://www.googleapis.com/auth/user.birthday.read";
@@ -14,7 +13,7 @@ const genderScope = "https://www.googleapis.com/auth/user.gender.read";
 const scope = `${birthDayScope} ${genderScope}`;
 
 const GoogleAuthButton = () => {
-  const { onSuccessLogin } = useAuth();
+  const { onSuccessLogin, clearAuth } = useAuth();
 
   const responseGoogle = (response) => {
     const { googleId, accessToken, profileObj } = response;
@@ -29,8 +28,8 @@ const GoogleAuthButton = () => {
     };
 
     nonTokenAxios
-      .post("/auth/google/", { email, password })
-      .then((response: any) => {
+      .post("/auth/google/", googleAuthInfo)
+      .then((response) => {
         onSuccessLogin(response);
       })
       .catch((error: any) => {
