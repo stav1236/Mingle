@@ -3,6 +3,8 @@ import jwt, { Secret } from "jsonwebtoken";
 
 import User from "../data/models/User";
 import logger from "../common/config/logger";
+import axios from "axios";
+import { GENDERS } from "../data/models/Gender";
 
 export const register = async (req: any, res: any) => {
   try {
@@ -148,17 +150,90 @@ export const refreshToken = async (req: any, res: any) => {
   );
 };
 
+const validateGoogleAccessToken = async (accessToken: string) => {
+  try {
+    const response = await axios.get(
+      `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`
+    );
+    const data = response.data;
+
+    if (data.audience === process.env.GOOGLE_CLIENT_ID) {
+      return true;
+    } else {
+      throw new Error("Invalid client ID");
+    }
+  } catch (error) {
+    throw new Error("Invalid access token");
+  }
+};
+
+const getGoogleUserBirthDateAndGender = async (
+  googleId: string,
+  accessToken: string
+) => {
+  const res = await axios.get(
+    `https://people.googleapis.com/v1/people/${googleId}?personFields=birthdays,genders&access_token=${accessToken}`
+  );
+
+  const data = res.data;
+
+  const genderValue = data.genders[0].value;
+  const gender =
+    genderValue === "male"
+      ? GENDERS.MALE
+      : genderValue === "female"
+      ? GENDERS.FEMALE
+      : GENDERS.OTHER;
+
+  const birthDateValue = data.birthdays[1].date;
+
+  const birthDate = new Date(
+    Date.UTC(
+      birthDateValue.year,
+      birthDateValue.month - 1,
+      birthDateValue.day,
+      0,
+      0,
+      0
+    )
+  );
+
+  return { gender, birthDate };
+};
+
 export const handleGoogleAuth = async (req: any, res: any) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
+    const {
+      googleId,
+      email,
+      accessToken: googleAccessToken,
+      firstName,
+      lastName,
+      imgSrc,
+    } = req.body;
 
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
-    if (!isPasswordMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
+    validateGoogleAccessToken(googleAccessToken);
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(googleId, salt);
+      const { birthDate, gender } = await getGoogleUserBirthDateAndGender(
+        googleId,
+        googleAccessToken
+      );
+
+      user = new User({
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+        birthDate,
+        gender,
+        imgSrc,
+      });
+
+      await user.save();
     }
 
     const accessToken = jwt.sign(
