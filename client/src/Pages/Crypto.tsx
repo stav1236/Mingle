@@ -19,7 +19,6 @@ import {
 import { CURRENCY, Currency } from "@/models/Currency";
 import { useQuery } from "react-query";
 import mingleAxios from "@/utilities/axios";
-import { getHebrewDate } from "@/utilities/dateUtils";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
