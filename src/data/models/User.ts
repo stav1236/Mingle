@@ -14,24 +14,18 @@
  *       properties:
  *         firstName:
  *           type: string
- *           description: The user's first name
  *         lastName:
  *           type: string
- *           description: The user's last name
  *         email:
  *           type: string
- *           description: The user's email
  *         password:
  *           type: string
- *           description: The user's password
  *         birthDate:
  *           type: string
  *           format: date
- *           description: The user's birth date
  *         gender:
  *           type: string
  *           enum: [ 'male', 'female', 'other' ]
- *           description: The user's gender
  *         tokens:
  *           type: array
  *           items:
@@ -39,7 +33,7 @@
  *           description: Array of user tokens
  *         imgSrc:
  *           type: string
- *           description: URL to the user's image
+ *           description: URL to the user's avatar
  *       example:
  *         firstName: 'John'
  *         lastName: 'Doe'
