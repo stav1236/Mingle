@@ -2,6 +2,8 @@ import path from "path";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import swaggerUI from "swagger-ui-express";
+import swaggerJsDoc from "swagger-jsdoc";
 
 import postRouter from "./routes/PostRH";
 import userRouter from "./routes/UserRH";
@@ -30,6 +32,26 @@ app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 app.use(express.static("client/dist"));
+
+if (process.env.NODE_ENV === "development") {
+  const options: swaggerJsDoc.Options = {
+    definition: {
+      openapi: "3.0.0",
+      info: {
+        title: "MINGLE REST API",
+        version: "1.0.0",
+        description: "REST mingel server",
+      },
+    },
+    servers: [
+      { url: "http://localhost:3000", description: "Development server" },
+    ],
+    apis: ["./src/routes/*.ts", "./src/data/models/*.ts"],
+  };
+
+  const specs = swaggerJsDoc(options);
+  app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
+}
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
