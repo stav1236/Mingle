@@ -1,3 +1,78 @@
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Comment:
+ *       type: object
+ *       properties:
+ *         text:
+ *           type: string
+ *         userId:
+ *           type: string
+ *           description: ID of the user who commented on the post
+ *       example:
+ *         text: "Great post!"
+ *         userId: "5f4dcc3b5aa765d61d8327deb882cf99"
+ *
+ *     Like:
+ *       type: object
+ *       properties:
+ *         userId:
+ *           type: string
+ *           description: ID of the user who liked the post
+ *       example:
+ *         userId: "5f4dcc3b5aa765d61d8327deb882cf99"
+ *
+ *     Post:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: ID of the post
+ *         text:
+ *           type: string
+ *         imgSrc:
+ *           type: string
+ *           description: URL to the post image
+ *         creatorId:
+ *           type: string
+ *           description: ID of the user who created the post
+ *         comments:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Comment'
+ *         likes:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Like'
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *       required:
+ *         - creatorId
+ *         - comments
+ *         - likes
+ *       example:
+ *         _id: "5f4dcc3b5aa765d61d8327deb882cf99"
+ *         text: "Awesome post!"
+ *         imgSrc: "https://example.com/image.jpg"
+ *         creatorId: "5f4dcc3b5aa765d61d8327deb882cf99"
+ *         comments: [
+ *           {
+ *             text: "Great post!",
+ *             userId: "5f4dcc3b5aa765d61d8327deb882cf99"
+ *           }
+ *         ]
+ *         likes: [
+ *           {
+ *             userId: "5f4dcc3b5aa765d61d8327deb882cf99"
+ *           }
+ *         ]
+ */
+
 import mongoose, { Schema, Document, Types } from "mongoose";
 
 export interface Comment {
