@@ -17,9 +17,13 @@ process.on("uncaughtException", (err) => {
   logger.error("uncaughtException", err);
 });
 
-const app = express();
+export const app = express();
 const port = 3000;
-const DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
+
+const DB_CONNECTION_STRING =
+  process.env.NODE_ENV === "test"
+    ? process.env.DB_CONNECTION_STRING_TEST
+    : process.env.DB_CONNECTION_STRING;
 
 if (!DB_CONNECTION_STRING) {
   logger.error("MongoDB connection string not provided in the .env file");
