@@ -1,9 +1,15 @@
-import mongoose from "mongoose";
-import request from "superagent";
-import { app } from "../src/server";
+import { Express } from "express";
 
-beforeAll((done) => {
-  done();
+import initApp from "../src/app";
+import User from "../src/data/models/User";
+import mongoose from "mongoose";
+
+let app: Express;
+
+beforeEach(async () => {
+  app = await initApp();
+
+  await User.deleteMany();
 });
 
 afterAll((done) => {
