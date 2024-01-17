@@ -32,7 +32,7 @@ export const register = async (req: any, res: any) => {
 
     res.status(200).json({ message: "User registered successfully" });
   } catch (error) {
-    console.error(error);
+    logger.error("something went wrong while try to register new user", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -56,7 +56,7 @@ export const login = async (req: any, res: any) => {
       { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
     );
     const refreshToken = jwt.sign(
-      { _id: user._id },
+      { _id: user._id, date: Date.now().toLocaleString() },
       process.env.REFRESH_TOKEN_SECRET as Secret
     );
 
@@ -131,7 +131,7 @@ export const refreshToken = async (req: any, res: any) => {
           { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
         );
         const newRefreshToken = jwt.sign(
-          { _id: user._id },
+          { _id: user._id, date: Date.now().toLocaleString() },
           process.env.REFRESH_TOKEN_SECRET as Secret
         );
 
@@ -242,7 +242,7 @@ export const handleGoogleAuth = async (req: any, res: any) => {
       { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
     );
     const refreshToken = jwt.sign(
-      { _id: user._id },
+      { _id: user._id, date: Date.now().toLocaleString() },
       process.env.REFRESH_TOKEN_SECRET as Secret
     );
 
