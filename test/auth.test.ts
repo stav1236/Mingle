@@ -154,3 +154,34 @@ describe("POST api/auth/logout ", () => {
     expect(response.statusCode).toBe(401);
   });
 });
+
+// describe("POST api/auth/google ", () => {
+//   test("auth new google accout", async () => {
+//     const loginResponse = await request(app)
+//       .post("/api/auth/login")
+//       .send({ email: TEST_USER.email, password: TEST_USER.password });
+//     refreshToken = loginResponse.body.refreshToken;
+
+//     const response = await request(app)
+//       .post("/api/auth/logout")
+//       .set("Authorization", "Bearer " + refreshToken);
+
+//     expect(response.statusCode).toBe(200);
+//   });
+
+//   test("auth exist google acount", async () => {
+//     const response = await request(app)
+//       .post("/api/auth/logout")
+//       .set("Authorization", "Bearer " + refreshToken);
+
+//     expect(response.statusCode).toBe(403);
+//   });
+
+//   test("google auth with error", async () => {
+//     const response = await request(app)
+//       .post("/api/auth/logout")
+//       .set("Authorization", "Bearer ");
+
+//     expect(response.statusCode).toBe(401);
+//   });
+// });
