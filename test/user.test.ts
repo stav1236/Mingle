@@ -84,3 +84,56 @@ describe("GET api/users/:userId ", () => {
     expect(response.statusCode).toBe(500);
   });
 });
+
+describe("PUT api/users/:field/:value", () => {
+  it("should update user details", async () => {
+    const field = "firstName";
+    const value = "NewFirstName";
+
+    const response = await request(app)
+      .put(`/api/users/${field}/${value}`)
+      .set("Authorization", "Bearer " + accessToken)
+      .expect(200);
+
+    expect(response.body).toHaveProperty("_id");
+    expect(response.body[field]).toBe(value);
+  });
+  it("try update unexist field", async () => {
+    const response = await request(app)
+      .put("/api/users/unexist/invalidValue")
+      .set("Authorization", "Bearer " + accessToken);
+
+    expect(response.body).not.toHaveProperty("unexist");
+  });
+  it("try update _id", async () => {
+    const response = await request(app)
+      .put("/api/users/_id/65945e6cc84ee4cf9896bc70")
+      .set("Authorization", "Bearer " + accessToken)
+      .expect(500);
+
+    expect(response.body).toEqual({ error: "Internal Server Error" });
+  });
+});
+
+// describe("POST api/users/avatar", () => {
+//   it("should update user avatar", async () => {
+//     const filePath = "./assets/test.png";
+
+//     const response = await request(app)
+//       .post("/user/avatar")
+//       .set("Authorization", "Bearer " + accessToken)
+//       .attach("image", filePath)
+//       .expect(200);
+
+//     expect(response.body).toHaveProperty("_id");
+//     expect(response.body.imgSrc).toBeDefined();
+//   });
+//   it("not support image type", async () => {
+//     const response = await request(app)
+//       .post("/user/avatar")
+//       .set("Authorization", "Bearer your-test-token")
+//       .attach("invalidField", "path-to-your-test-image.jpg")
+//       .expect(500);
+//     expect(response.body).toEqual({ error: "Internal Server Error" });
+//   });
+// });
