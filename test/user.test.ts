@@ -16,7 +16,7 @@ const TEST_USER = {
   birthDate: Date.UTC(2001, 7, 11, 0, 0, 0),
   gender: "זכר",
 };
-let accessToken: string, refreshToken: string, userId: string;
+let accessToken: string, userId: string;
 
 beforeAll(async () => {
   app = await initApp();
@@ -33,7 +33,6 @@ beforeAll(async () => {
 
   userId = response.body._id;
   accessToken = response.body.accessToken;
-  refreshToken = response.body.refreshToken;
 });
 
 afterAll((done) => {
