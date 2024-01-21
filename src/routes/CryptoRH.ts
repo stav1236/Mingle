@@ -19,7 +19,7 @@ import axios from "axios";
 import express from "express";
 
 import logger from "../common/config/logger";
-import { getRelevetDataForUser } from "../logic/CryptoBl";
+import { getRelevetDataForUser } from "../logic/CryptoBL";
 import authMiddleware from "../middleware/authMiddleware";
 
 const cryptoRouter = express.Router();

@@ -4,6 +4,10 @@ import { Express } from "express";
 
 import initApp from "../src/app";
 import User from "../src/data/models/User";
+import axios from "axios";
+import { getRelevetDataForUser } from "../src/logic/CryptoBL";
+
+jest.mock("axios");
 
 let app: Express;
 
@@ -41,31 +45,55 @@ afterAll((done) => {
 });
 
 describe("GET api/crypto/:amount/:curreny ", () => {
-  test("crypto with limit", async () => {
-    const limit = 10;
+  it("should return relevant data for the user", async () => {
+    const mockData = {
+      data: {
+        data: [
+          {
+            name: "Bitcoin",
+            symbol: "BTC",
+            cmc_rank: 1,
+            quote: {
+              USD: {
+                price: 50000,
+                last_updated: "2024-01-21T12:34:56.789Z",
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    (axios.get as jest.MockedFunction<typeof axios.get>).mockResolvedValue(
+      mockData
+    );
+
     const response = await request(app)
-      .get(`/api/crypto/${limit}/USD`)
+      .get(`/api/crypto/10/USD`)
       .set("Authorization", "Bearer " + accessToken);
 
-    expect(response.statusCode).toBe(200);
+    const expectedData = getRelevetDataForUser(mockData.data.data, "USD");
+
+    expect(response.body).toEqual(expectedData);
     const cryptoArr = response.body;
-
-    expect(cryptoArr.length).toBe(limit);
-
     const lastItem = cryptoArr.pop();
-
     expect(lastItem).toHaveProperty("name");
     expect(lastItem).toHaveProperty("symbol");
     expect(lastItem).toHaveProperty("rank");
     expect(lastItem).toHaveProperty("price");
     expect(lastItem).toHaveProperty("lastUpdated");
   });
-  test("bad crypto request", async () => {
+
+  it("should handle errors and return 500 status", async () => {
+    (axios.get as jest.MockedFunction<typeof axios.get>).mockRejectedValue(
+      new Error("Mocked error")
+    );
+
     const response = await request(app)
-      .get(`/api/crypto/bad/verybad`)
+      .get(`/api/crypto/10/USD`)
       .set("Authorization", "Bearer " + accessToken);
 
-    expect(response.statusCode).toBe(500);
+    expect(response.body).toEqual({ error: "Internal Server Error" });
   });
 });
 
