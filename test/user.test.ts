@@ -4,6 +4,7 @@ import { Express } from "express";
 
 import initApp from "../src/app";
 import User from "../src/data/models/User";
+import path from "path";
 
 let app: Express;
 
@@ -115,25 +116,28 @@ describe("PUT api/users/:field/:value", () => {
   });
 });
 
-// describe("POST api/users/avatar", () => {
-//   it("should update user avatar", async () => {
-//     const filePath = "./assets/test.png";
+describe("POST api/users/avatar", () => {
+  it("should update user avatar", async () => {
+    const filePath = path.join(__dirname, "assets", "test.png");
 
-//     const response = await request(app)
-//       .post("/user/avatar")
-//       .set("Authorization", "Bearer " + accessToken)
-//       .attach("image", filePath)
-//       .expect(200);
+    const response = await request(app)
+      .post("/api/users/avatar")
+      .set("Authorization", "Bearer " + accessToken)
+      .attach("image", filePath)
+      .expect(200);
 
-//     expect(response.body).toHaveProperty("_id");
-//     expect(response.body.imgSrc).toBeDefined();
-//   });
-//   it("not support image type", async () => {
-//     const response = await request(app)
-//       .post("/user/avatar")
-//       .set("Authorization", "Bearer your-test-token")
-//       .attach("invalidField", "path-to-your-test-image.jpg")
-//       .expect(500);
-//     expect(response.body).toEqual({ error: "Internal Server Error" });
-//   });
-// });
+    expect(response.body).toHaveProperty("_id");
+    expect(response.body.imgSrc).toBeDefined();
+  });
+  it("not support image type", async () => {
+    const filePath = path.join(__dirname, "assets", "giphy.gif");
+
+    const response = await request(app)
+      .post("/api/users/avatar")
+      .set("Authorization", "Bearer " + accessToken)
+      .attach("image", filePath)
+      .expect(500);
+
+    expect(response.body).toEqual({ error: "Internal Server Error" });
+  });
+});
