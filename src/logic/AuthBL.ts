@@ -150,19 +150,21 @@ export const refreshToken = async (req: any, res: any) => {
   );
 };
 
-const validateGoogleAccessToken = async (accessToken: string) => {
+export const validateGoogleAccessToken = async (accessToken: string) => {
+  const invalidClientIDMessage = "Invalid client ID";
   try {
     const response = await axios.get(
       `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`
     );
-    const data = response.data;
+    const data = response?.data;
 
-    if (data.audience === process.env.GOOGLE_CLIENT_ID) {
+    if (data?.audience === process.env.GOOGLE_CLIENT_ID) {
       return true;
     } else {
-      throw new Error("Invalid client ID");
+      throw new Error(invalidClientIDMessage);
     }
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.message === invalidClientIDMessage) throw error;
     throw new Error("Invalid access token");
   }
 };
