@@ -1,5 +1,9 @@
 import axios from "axios";
-import { validateGoogleAccessToken } from "../src/logic/AuthBL";
+import {
+  getGoogleUserBirthDateAndGender,
+  validateGoogleAccessToken,
+} from "../src/logic/AuthBL";
+import { GENDERS } from "../src/data/models/Gender";
 
 jest.mock("axios");
 
@@ -30,5 +34,30 @@ describe("validateGoogleAccessToken", () => {
     await expect(
       validateGoogleAccessToken("invalidAccessToken")
     ).rejects.toThrowError("Invalid access token");
+  });
+});
+
+describe("getGoogleUserBirthDateAndGender", () => {
+  it("should return gender and birthDate", async () => {
+    const mockedAxios = axios as jest.Mocked<typeof axios>;
+
+    const mockData = {
+      data: {
+        genders: [{ value: "male" }],
+        birthdays: [{}, { date: { year: 1990, month: 5, day: 15 } }],
+      },
+    };
+
+    mockedAxios.get.mockResolvedValue(mockData);
+
+    const result = await getGoogleUserBirthDateAndGender(
+      "googleId",
+      "accessToken"
+    );
+
+    expect(result).toEqual({
+      gender: GENDERS.MALE,
+      birthDate: new Date(Date.UTC(1990, 4, 15, 0, 0, 0)),
+    });
   });
 });

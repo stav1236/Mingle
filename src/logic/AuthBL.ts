@@ -169,7 +169,7 @@ export const validateGoogleAccessToken = async (accessToken: string) => {
   }
 };
 
-const getGoogleUserBirthDateAndGender = async (
+export const getGoogleUserBirthDateAndGender = async (
   googleId: string,
   accessToken: string
 ) => {
@@ -177,9 +177,9 @@ const getGoogleUserBirthDateAndGender = async (
     `https://people.googleapis.com/v1/people/${googleId}?personFields=birthdays,genders&access_token=${accessToken}`
   );
 
-  const data = res.data;
+  const data = res?.data;
 
-  const genderValue = data.genders[0].value;
+  const genderValue = data?.genders[0]?.value;
   const gender =
     genderValue === "male"
       ? GENDERS.MALE
@@ -187,7 +187,7 @@ const getGoogleUserBirthDateAndGender = async (
       ? GENDERS.FEMALE
       : GENDERS.OTHER;
 
-  const birthDateValue = data.birthdays[1].date;
+  const birthDateValue = data?.birthdays[1]?.date;
 
   const birthDate = new Date(
     Date.UTC(
