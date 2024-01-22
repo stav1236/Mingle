@@ -11,7 +11,7 @@ const logger = winston.createLogger({
   level: "info",
   format: winston.format.combine(
     winston.format.label({
-      label: path.basename(process.mainModule!.filename),
+      label: path.basename(process.mainModule?.filename ?? ""),
     }),
     winston.format.timestamp({
       format: "YYYY-MM-DD HH:mm:ss",

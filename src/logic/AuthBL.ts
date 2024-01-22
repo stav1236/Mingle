@@ -32,7 +32,7 @@ export const register = async (req: any, res: any) => {
 
     res.status(200).json({ message: "User registered successfully" });
   } catch (error) {
-    console.error(error);
+    logger.error("something went wrong while try to register new user", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -56,7 +56,7 @@ export const login = async (req: any, res: any) => {
       { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
     );
     const refreshToken = jwt.sign(
-      { _id: user._id },
+      { _id: user._id, date: Date.now().toLocaleString() },
       process.env.REFRESH_TOKEN_SECRET as Secret
     );
 
@@ -131,7 +131,7 @@ export const refreshToken = async (req: any, res: any) => {
           { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
         );
         const newRefreshToken = jwt.sign(
-          { _id: user._id },
+          { _id: user._id, date: Date.now().toLocaleString() },
           process.env.REFRESH_TOKEN_SECRET as Secret
         );
 
@@ -150,24 +150,26 @@ export const refreshToken = async (req: any, res: any) => {
   );
 };
 
-const validateGoogleAccessToken = async (accessToken: string) => {
+export const validateGoogleAccessToken = async (accessToken: string) => {
+  const invalidClientIDMessage = "Invalid client ID";
   try {
     const response = await axios.get(
       `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`
     );
-    const data = response.data;
+    const data = response?.data;
 
-    if (data.audience === process.env.GOOGLE_CLIENT_ID) {
+    if (data?.audience === process.env.GOOGLE_CLIENT_ID) {
       return true;
     } else {
-      throw new Error("Invalid client ID");
+      throw new Error(invalidClientIDMessage);
     }
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.message === invalidClientIDMessage) throw error;
     throw new Error("Invalid access token");
   }
 };
 
-const getGoogleUserBirthDateAndGender = async (
+export const getGoogleUserBirthDateAndGender = async (
   googleId: string,
   accessToken: string
 ) => {
@@ -175,9 +177,9 @@ const getGoogleUserBirthDateAndGender = async (
     `https://people.googleapis.com/v1/people/${googleId}?personFields=birthdays,genders&access_token=${accessToken}`
   );
 
-  const data = res.data;
+  const data = res?.data;
 
-  const genderValue = data.genders[0].value;
+  const genderValue = data?.genders[0]?.value;
   const gender =
     genderValue === "male"
       ? GENDERS.MALE
@@ -185,13 +187,13 @@ const getGoogleUserBirthDateAndGender = async (
       ? GENDERS.FEMALE
       : GENDERS.OTHER;
 
-  const birthDateValue = data.birthdays[1].date;
+  const birthDateValue = data?.birthdays[1]?.date;
 
   const birthDate = new Date(
     Date.UTC(
-      birthDateValue.year,
-      birthDateValue.month - 1,
-      birthDateValue.day,
+      birthDateValue?.year,
+      birthDateValue?.month - 1,
+      birthDateValue?.day,
       0,
       0,
       0
@@ -212,7 +214,7 @@ export const handleGoogleAuth = async (req: any, res: any) => {
       imgSrc,
     } = req.body;
 
-    validateGoogleAccessToken(googleAccessToken);
+    await validateGoogleAccessToken(googleAccessToken);
 
     let user = await User.findOne({ email });
     if (!user) {
@@ -242,7 +244,7 @@ export const handleGoogleAuth = async (req: any, res: any) => {
       { expiresIn: process.env.JWT_TOKEN_EXPIRATION }
     );
     const refreshToken = jwt.sign(
-      { _id: user._id },
+      { _id: user._id, date: Date.now().toLocaleString() },
       process.env.REFRESH_TOKEN_SECRET as Secret
     );
 

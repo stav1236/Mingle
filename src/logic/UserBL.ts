@@ -1,5 +1,6 @@
 import { ProjectionType } from "mongoose";
 import User from "../data/models/User";
+import logger from "../common/config/logger";
 
 export const getUserById = async (
   _id: string,
@@ -48,7 +49,7 @@ export const updateUserDetails = async (req: any, res: any) => {
 
     res.status(500).json({ error: "Internal Server Error" });
   } catch (error) {
-    console.error("Error saving data:", error);
+    logger.error("Error saving data:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
