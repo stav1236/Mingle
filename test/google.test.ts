@@ -1,10 +1,13 @@
 import axios from "axios";
+import request from "supertest";
+import mongoose from "mongoose";
+import { Express } from "express";
 
 import {
   getGoogleUserBirthDateAndGender,
-  handleGoogleAuth,
   validateGoogleAccessToken,
 } from "../src/logic/AuthBL";
+import initApp from "../src/app";
 import * as AuthBLModule from "../src/logic/AuthBL";
 
 import User from "../src/data/models/User";
@@ -67,11 +70,16 @@ describe("getGoogleUserBirthDateAndGender", () => {
   });
 });
 
-describe("handleGoogleAuth function", () => {
+describe("POST api/auth/google", () => {
+  let app: Express;
+
+  const validAccessToken = "mockAccessToken";
   let mockedValidateGoogleAccessToken, mockedGetGoogleUserBirthDateAndGender;
 
-  beforeEach(() => {
-    User.deleteMany();
+  beforeAll(async () => {
+    app = await initApp();
+
+    await User.deleteMany();
     jest.resetAllMocks();
 
     mockedValidateGoogleAccessToken = jest.spyOn(
@@ -85,19 +93,75 @@ describe("handleGoogleAuth function", () => {
 
     mockedValidateGoogleAccessToken.mockImplementation(
       async (accessToken: string) => {
-        if (accessToken === "mockAccessToken") return true;
+        if (accessToken === validAccessToken) return true;
         else throw new Error("invalid access token");
       }
     );
     mockedGetGoogleUserBirthDateAndGender.mockResolvedValue({
-      birthDate: "mockBirthDate",
-      gender: "male",
+      birthDate: new Date(Date.UTC(1990, 4, 15, 0, 0, 0)),
+      gender: GENDERS.MALE,
     });
   });
 
-  test("register with google", async () => {});
+  afterAll((done) => {
+    mongoose.connection.close();
+    done();
+  });
 
-  test("login exist account with google", async () => {});
+  test("register with google", async () => {
+    const response = await request(app).post("/api/auth/google").send({
+      googleId: "mockGoogleId",
+      email: "mock@example.com",
+      accessToken: validAccessToken,
+      firstName: "John",
+      lastName: "Doe",
+      imgSrc: "mockImageSrc",
+    });
 
-  test("bad google access token", async () => {});
+    expect(response.statusCode).toBe(200);
+    const accessToken = response.body.accessToken;
+    const refreshToken = response.body.refreshToken;
+    expect(accessToken).toBeDefined();
+    expect(refreshToken).toBeDefined();
+  });
+
+  test("login exist account with google", async () => {
+    const existUser = new User({
+      firstName: "firstName",
+      lastName: "lastName",
+      email: "existUser.com",
+      password: "test",
+      birthDate: Date.now(),
+      gender: "זכר",
+    });
+    await existUser.save();
+
+    const response = await request(app).post("/api/auth/google").send({
+      googleId: "mockGoogleId",
+      email: "existUser.com",
+      accessToken: validAccessToken,
+      firstName: "John",
+      lastName: "Doe",
+      imgSrc: "mockImageSrc",
+    });
+
+    expect(response.statusCode).toBe(200);
+    const accessToken = response.body.accessToken;
+    const refreshToken = response.body.refreshToken;
+    expect(accessToken).toBeDefined();
+    expect(refreshToken).toBeDefined();
+  });
+
+  test("bad google access token", async () => {
+    const response = await request(app).post("/api/auth/google").send({
+      googleId: "mockGoogleId",
+      email: "mock@example.com",
+      accessToken: "invalid",
+      firstName: "John",
+      lastName: "Doe",
+      imgSrc: "mockImageSrc",
+    });
+
+    expect(response.statusCode).toBe(500);
+  });
 });

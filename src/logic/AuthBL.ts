@@ -191,9 +191,9 @@ export const getGoogleUserBirthDateAndGender = async (
 
   const birthDate = new Date(
     Date.UTC(
-      birthDateValue.year,
-      birthDateValue.month - 1,
-      birthDateValue.day,
+      birthDateValue?.year,
+      birthDateValue?.month - 1,
+      birthDateValue?.day,
       0,
       0,
       0
@@ -214,7 +214,7 @@ export const handleGoogleAuth = async (req: any, res: any) => {
       imgSrc,
     } = req.body;
 
-    validateGoogleAccessToken(googleAccessToken);
+    await validateGoogleAccessToken(googleAccessToken);
 
     let user = await User.findOne({ email });
     if (!user) {
