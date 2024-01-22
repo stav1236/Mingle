@@ -1,7 +1,7 @@
 export const getRelevetDataForUser = (cryptoData: any[], currency: string) => {
   return cryptoData.map((curr) => {
     const utcDate = new Date(curr?.quote[currency].last_updated);
-    const price = curr?.quote[currency].price;
+    const price = curr?.quote[currency]?.price;
     return {
       name: curr?.name,
       symbol: curr?.symbol,
