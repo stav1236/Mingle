@@ -1,8 +1,13 @@
 import axios from "axios";
+
 import {
   getGoogleUserBirthDateAndGender,
+  handleGoogleAuth,
   validateGoogleAccessToken,
 } from "../src/logic/AuthBL";
+import * as AuthBLModule from "../src/logic/AuthBL";
+
+import User from "../src/data/models/User";
 import { GENDERS } from "../src/data/models/Gender";
 
 jest.mock("axios");
@@ -60,4 +65,39 @@ describe("getGoogleUserBirthDateAndGender", () => {
       birthDate: new Date(Date.UTC(1990, 4, 15, 0, 0, 0)),
     });
   });
+});
+
+describe("handleGoogleAuth function", () => {
+  let mockedValidateGoogleAccessToken, mockedGetGoogleUserBirthDateAndGender;
+
+  beforeEach(() => {
+    User.deleteMany();
+    jest.resetAllMocks();
+
+    mockedValidateGoogleAccessToken = jest.spyOn(
+      AuthBLModule,
+      "validateGoogleAccessToken"
+    );
+    mockedGetGoogleUserBirthDateAndGender = jest.spyOn(
+      AuthBLModule,
+      "getGoogleUserBirthDateAndGender"
+    );
+
+    mockedValidateGoogleAccessToken.mockImplementation(
+      async (accessToken: string) => {
+        if (accessToken === "mockAccessToken") return true;
+        else throw new Error("invalid access token");
+      }
+    );
+    mockedGetGoogleUserBirthDateAndGender.mockResolvedValue({
+      birthDate: "mockBirthDate",
+      gender: "male",
+    });
+  });
+
+  test("register with google", async () => {});
+
+  test("login exist account with google", async () => {});
+
+  test("bad google access token", async () => {});
 });
