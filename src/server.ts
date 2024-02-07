@@ -11,12 +11,13 @@ process.on("uncaughtException", (err) => {
   logger.error("uncaughtException", err);
 });
 
-const port = 3000;
+const POST_DEV = 80;
+const POST_PROD = 443;
 
 initApp().then((app) => {
   if (process.env.NODE_ENV !== "production") {
-    http.createServer(app).listen(port, () => {
-      logger.info(`Server is running at http://localhost:${port}`);
+    http.createServer(app).listen(POST_DEV, () => {
+      logger.info(`Server is running at http://localhost:${POST_DEV}`);
     });
   } else {
     const options = {
@@ -24,8 +25,8 @@ initApp().then((app) => {
       cert: fs.readFileSync("./client-cert.pem"),
     };
 
-    https.createServer(options, app).listen(port, () => {
-      logger.info(`Server is running at https://localhost:${port}`);
+    https.createServer(options, app).listen(POST_PROD, () => {
+      logger.info(`Server is running at https://localhost:${POST_PROD}`);
     });
   }
 });
