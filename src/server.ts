@@ -1,3 +1,4 @@
+import fs from "fs";
 import http from "http";
 import https from "https";
 import dotenv from "dotenv";
@@ -18,8 +19,13 @@ initApp().then((app) => {
       logger.info(`Server is running at http://localhost:${port}`);
     });
   } else {
-    https.createServer(app).listen(port, () => {
-      logger.info(`Server is running at http://localhost:${port}`);
+    const options = {
+      key: fs.readFileSync("./client-key.pem"),
+      cert: fs.readFileSync("./client-cert.pem"),
+    };
+
+    https.createServer(options, app).listen(port, () => {
+      logger.info(`Server is running at https://localhost:${port}`);
     });
   }
 });

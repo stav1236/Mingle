@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon src/server.ts",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --coverage --forceExit",
-    "build": "tsc",
-    "build:production": "cross-env NODE_ENV=production tsc"
+    "prod": "cross-env NODE_ENV=production tsc -p tsconfig_prod.json && pm2 restart ecosystem.config.js --env production"
   },
   "keywords": [],
   "author": "",

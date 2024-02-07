@@ -22,7 +22,7 @@ interface AuthContextProps {
   logout: () => void;
   clearAuth: () => void;
   updateUser: (newUser: User) => void;
-  onSuccessLogin: (response) => void;
+  onSuccessLogin: (response: any) => void;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -57,7 +57,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     getUserById();
   }, [isLogin]);
 
-  const onSuccessLogin = (response) => {
+  const onSuccessLogin = (response: any) => {
     saveAccessToken(response.data.accessToken);
     saveRefreshToken(response.data.refreshToken);
     localStorage.setItem("_id", response.data._id);
