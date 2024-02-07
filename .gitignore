@@ -130,3 +130,6 @@ dist
 .pnp.*
 
 uploads
+/client.csr
+/client-cert.pem
+/client-key.pem
