@@ -16,7 +16,7 @@ const GoogleAuthButton = () => {
   const navigate = useNavigate();
   const { onSuccessLogin, clearAuth } = useAuth();
 
-  const responseGoogle = (response) => {
+  const responseGoogle = (response: any) => {
     const { googleId, accessToken, profileObj } = response;
     const { email, familyName, givenName, imageUrl } = profileObj;
     const googleAuthInfo = {
